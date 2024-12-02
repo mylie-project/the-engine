@@ -42,6 +42,12 @@ public abstract class Scheduler implements Feature.Engine {
         return null;
     }
 
+    public void clearCaches(long frameId) {
+        for (Cache cache : caches) {
+            cache.update(frameId);
+        }
+    }
+
     protected void registerTarget(Async.Target target, TaskExecutor executor) {
         log.trace("Target<{}> registered", target.name());
         this.targets.put(target, executor);
