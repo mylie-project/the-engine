@@ -1,0 +1,16 @@
+<configuration>
+    <conversionRule conversionWord="level_color" converterClass="mylie.util.logback.ColorConverter" />
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>[%thread] %level_color(%-5level) %cyan(%logger{15}) - %level_color(%msg) %n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="mylie.engine.core.async" level="trace" />
+
+    <root level="trace">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
