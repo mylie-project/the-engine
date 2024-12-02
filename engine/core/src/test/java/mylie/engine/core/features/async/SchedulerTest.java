@@ -1,4 +1,4 @@
-package mylie.engine.async;
+package mylie.engine.core.features.async;
 
 import static mylie.engine.core.features.async.Async.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,10 +8,6 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import mylie.engine.core.features.async.Async;
-import mylie.engine.core.features.async.Cache;
-import mylie.engine.core.features.async.Functions;
-import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.core.features.async.schedulers.SchedulerSingleThreaded;
 import mylie.engine.core.features.async.schedulers.VirtualThreadScheduler;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +17,12 @@ public class SchedulerTest {
 
     static Stream<Scheduler> schedulerProvider() {
 
-        return Stream.of(new SchedulerSingleThreaded(), new VirtualThreadScheduler());
+        return Stream.of(init(new SchedulerSingleThreaded()),init( new VirtualThreadScheduler()));
+    }
+
+    public static Scheduler init(Scheduler scheduler) {
+        scheduler.onSetup(null,null);
+        return scheduler;
     }
 
     @ParameterizedTest
