@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-
 import mylie.engine.core.features.async.schedulers.SchedulerSingleThreaded;
 import mylie.engine.core.features.async.schedulers.VirtualThreadScheduler;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,11 +16,11 @@ public class SchedulerTest {
 
     static Stream<Scheduler> schedulerProvider() {
 
-        return Stream.of(init(new SchedulerSingleThreaded()),init( new VirtualThreadScheduler()));
+        return Stream.of(init(new SchedulerSingleThreaded()), init(new VirtualThreadScheduler()));
     }
 
     public static Scheduler init(Scheduler scheduler) {
-        scheduler.onSetup(null,null);
+        scheduler.onSetup(null, null);
         return scheduler;
     }
 

@@ -15,7 +15,7 @@ public class ColorConverter extends ForegroundCompositeConverterBase<ILoggingEve
             case Level.ERROR_INT:
                 return ANSIConstants.BOLD + ANSIConstants.RED_FG; // same as default color scheme
             case Level.WARN_INT:
-                return ANSIConstants.RED_FG;// same as default color scheme
+                return ANSIConstants.RED_FG; // same as default color scheme
             case Level.INFO_INT:
                 return ANSIConstants.GREEN_FG; // use CYAN instead of BLUE
             default:

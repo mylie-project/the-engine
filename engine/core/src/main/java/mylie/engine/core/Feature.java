@@ -8,36 +8,40 @@ public interface Feature {
     interface Lifecycle {
         interface InitDestroy {
             void onInit();
+
             void onDestroy();
         }
+
         interface Update {
             void onUpdate();
+
             interface Timed {
                 void onUpdate(Timer.Time time);
             }
         }
+
         interface EnableDisable {
             void onEnable();
+
             void onDisable();
+
             default void setEnabled(boolean enabled) {
-                //if (this instanceof BaseFeature baseFeature) {
+                // if (this instanceof BaseFeature baseFeature) {
                 //    baseFeature.setRequestEnabled(enabled);
-                //}
+                // }
             }
         }
     }
 
-    interface Settings<T extends Feature>{
+    interface Settings<T extends Feature> {
         T build();
     }
 
-    interface Engine extends Feature{
+    interface Engine extends Feature {
         Class<? extends Feature> featureType();
 
         void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration);
     }
 
-    interface Application extends Feature{
-
-    }
+    interface Application extends Feature {}
 }

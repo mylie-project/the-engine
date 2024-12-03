@@ -5,12 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.features.async.caches.ConcurrentMapCache;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
+import mylie.engine.core.features.async.caches.ConcurrentMapCache;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
@@ -18,8 +17,10 @@ public abstract class Scheduler implements Feature.Engine {
     private final Cache.GlobalCache globalCache;
     private final Map<Async.Target, TaskExecutor> targets;
     private final Set<Cache> caches;
+
     @Getter
     private final Class<? extends Feature> featureType = Scheduler.class;
+
     public Scheduler() {
         this.targets = new HashMap<>();
         this.globalCache = new ConcurrentMapCache();

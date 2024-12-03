@@ -5,12 +5,15 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
 public abstract class Cache {
     @Getter
     private final String name;
+
     @Setter(AccessLevel.PACKAGE)
     @Getter(AccessLevel.PROTECTED)
     private GlobalCache globalCache;
+
     protected Cache(String name) {
         this.name = name;
     }

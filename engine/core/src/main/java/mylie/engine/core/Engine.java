@@ -17,7 +17,8 @@ public class Engine {
 
     public interface Settings {
         Setting<Engine, SchedulerSettings> Scheduler = new Setting<>("Scheduler", SchedulerSettings.class, true, null);
-        Setting<Engine, Timer.Settings> Timer = new Setting<>("Timer", Timer.Settings.class, true, new NanoTimer.Settings());
+        Setting<Engine, Timer.Settings> Timer =
+                new Setting<>("Timer", Timer.Settings.class, true, new NanoTimer.Settings());
     }
 
     public static ShutdownReason start(
@@ -39,10 +40,10 @@ public class Engine {
                 log.info("Restarting the engine as requested");
             }
         } while (restart);
-        if(shutdownReason instanceof ShutdownReason.UserRequest) {
+        if (shutdownReason instanceof ShutdownReason.UserRequest) {
             log.info("Engine shutdown complete, reason: {}", shutdownReason.message);
         }
-        if(shutdownReason instanceof ShutdownReason.Error){
+        if (shutdownReason instanceof ShutdownReason.Error) {
             log.error("Engine shutdown because of {}", shutdownReason.message);
         }
         return shutdownReason;

@@ -2,18 +2,16 @@ package mylie.engine.core.features.async.schedulers;
 
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Result;
 import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.core.features.async.Tasks;
-import mylie.engine.core.FeatureManager;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
 public class SchedulerSingleThreaded extends Scheduler implements Scheduler.TaskExecutor {
-    public SchedulerSingleThreaded() {
-
-    }
+    public SchedulerSingleThreaded() {}
 
     @Override
     public void registerTarget(Async.Target target, Consumer<Runnable> consumer) {

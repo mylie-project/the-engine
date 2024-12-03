@@ -6,11 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Result;
 import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.core.features.async.Tasks;
-import mylie.engine.core.FeatureManager;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
