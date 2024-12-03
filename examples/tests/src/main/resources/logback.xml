@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="mylie.engine.core.async" level="trace" />
+    <logger name="mylie.engine.core.features.async" level="debug" />
 
     <root level="trace">
         <appender-ref ref="STDOUT" />

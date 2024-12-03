@@ -21,7 +21,7 @@ dependencies {
 tasks.named<Test>("test") {
     useJUnitPlatform()
     maxHeapSize = "1G"
-    maxParallelForks=10
+    maxParallelForks=1
 }
 
 val createVersionProperties by tasks.registering(WriteProperties::class) {

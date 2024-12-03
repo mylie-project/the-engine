@@ -116,7 +116,7 @@ public class SchedulerTest {
     private static Functions.F0<Boolean, AtomicInteger> atomicIntegerIncrease =
             new Functions.F0<Boolean, AtomicInteger>("AtomicIntegerIncrease") {
                 @Override
-                Boolean run(AtomicInteger o) {
+                public Boolean run(AtomicInteger o) {
                     o.incrementAndGet();
                     return true;
                 }
@@ -125,7 +125,7 @@ public class SchedulerTest {
     private static Functions.F0<Boolean, AtomicInteger> atomicIntegerDecrease =
             new Functions.F0<Boolean, AtomicInteger>("AtomicIntegerDecrease") {
                 @Override
-                Boolean run(AtomicInteger o) {
+                public Boolean run(AtomicInteger o) {
                     o.decrementAndGet();
                     return true;
                 }

@@ -1,10 +1,12 @@
 package mylie.engine.core.features.async;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.Feature;
 
 @Slf4j
 public final class Async {
@@ -55,6 +57,34 @@ public final class Async {
         return result;
     }
 
+    public static <R,T> Iterable<Result<R>> async(Mode mode, Cache cache, Target target, int frameId, List<?> objects, Class<T> targetType, Functions.F0<R, T> function) {
+        Set<Result<R>> results=new HashSet<>();
+        Mode currentMode = mode;
+        for (Object object : objects) {
+            currentMode = mode == Mode.Direct && canExecuteDirect(target) ? Mode.Direct : Mode.Async;
+            if(targetType.isAssignableFrom(object.getClass())) {
+                T object1 = targetType.cast(object);
+                results.add(async(currentMode, cache, target, frameId, function, object1));
+            }
+        }
+        return results;
+    }
+
+    public static <R,T> Iterable<Result<R>> async(Mode mode, Cache cache, Function<T,Target> target, int frameId, List<?> objects, Class<T> targetType, Functions.F0<R, T> function) {
+        Set<Result<R>> results=new HashSet<>();
+        Mode currentMode = mode;
+        Target currentTarget = null;
+        for (Object object : objects) {
+            if(targetType.isAssignableFrom(object.getClass())) {
+                T object1 = targetType.cast(object);
+                currentTarget=target.apply(object1);
+                currentMode = mode == Mode.Direct && canExecuteDirect(currentTarget) ? Mode.Direct : Mode.Async;
+                results.add(async(currentMode, cache, currentTarget, frameId, function, object1));
+            }
+        }
+        return results;
+    }
+
     private static <R> Result<R> executeTask(
             Tasks<R> tasks, Mode mode, int hashCode, long frameId, Cache cache, Target target) {
         if (mode == Mode.Direct) {
@@ -85,5 +115,10 @@ public final class Async {
 
     private static int getHashCode(Functions.Function function, Object... objects) {
         return Objects.hash(function, Arrays.hashCode(objects));
+    }
+
+    private static boolean canExecuteDirect(Target target){
+        if(target == BACKGROUND) return true;
+        return Thread.currentThread().getName().equals(target.name());
     }
 }

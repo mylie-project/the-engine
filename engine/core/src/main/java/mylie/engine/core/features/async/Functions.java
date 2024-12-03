@@ -19,7 +19,7 @@ public interface Functions {
             super(name);
         }
 
-        abstract R run(O o);
+        protected abstract R run(O o);
     }
 
     abstract class F1<R, O, P1> extends Function {

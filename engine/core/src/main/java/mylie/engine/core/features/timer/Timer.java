@@ -15,8 +15,7 @@ public abstract class Timer implements Feature.Engine,Feature.Lifecycle.Update {
     private Time time;
     private final Settings settings;
     private float logInterval;
-    private double fpsAvg;
-    private int count;
+    private long count;
     protected Timer(Settings settings) {
         this.settings = settings;
     }
@@ -29,14 +28,12 @@ public abstract class Timer implements Feature.Engine,Feature.Lifecycle.Update {
     public void onUpdate() {
         time = getNewTime();
         logInterval+= (float) time.delta();
-        fpsAvg+= 1d/time.delta();
         count++;
         if(logInterval>settings().fpsLogInterval()){
-            logInterval=0;
-            fpsAvg/=count;
+
+            log.info("FPS: {}",count);
             count=0;
-            log.info("FPS: {}",fpsAvg);
-            fpsAvg=0;
+            logInterval=0;
         }
     }
 
@@ -57,7 +54,7 @@ public abstract class Timer implements Feature.Engine,Feature.Lifecycle.Update {
 
     @Data
     public abstract static class Settings implements Feature.Settings<Timer> {
-        private double appTimeModifier;
-        private float fpsLogInterval;
+        private double appTimeModifier=1;
+        private float fpsLogInterval=1;
     }
 }
