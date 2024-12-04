@@ -11,8 +11,6 @@ import mylie.engine.core.features.async.Result;
 import mylie.engine.core.features.timer.Timer;
 import mylie.util.configuration.Configuration;
 
-import java.util.Objects;
-
 @Slf4j
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PACKAGE)
@@ -93,6 +91,4 @@ public abstract class BaseFeature implements Feature {
                     return true;
                 }
             };
-
-
 }

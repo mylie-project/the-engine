@@ -4,7 +4,6 @@ import mylie.engine.core.Feature;
 
 public abstract class Profiler implements Feature.Engine {
 
-
     public interface Context {}
 
     public interface Metric {

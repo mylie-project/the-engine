@@ -1,7 +1,6 @@
 package mylie.engine.core;
 
 import mylie.engine.core.features.timer.Timer;
-import mylie.util.configuration.Configuration;
 
 public interface Feature {
 
@@ -26,9 +25,9 @@ public interface Feature {
             void onDisable();
 
             default void setEnabled(boolean enabled) {
-                // if (this instanceof BaseFeature baseFeature) {
-                //    baseFeature.setRequestEnabled(enabled);
-                // }
+                if (this instanceof BaseFeature baseFeature) {
+                    baseFeature.requestEnabled(enabled);
+                }
             }
         }
     }
@@ -37,9 +36,7 @@ public interface Feature {
         T build();
     }
 
-    interface Engine extends Feature {
-
-    }
+    interface Engine extends Feature {}
 
     interface Application extends Feature {}
 }

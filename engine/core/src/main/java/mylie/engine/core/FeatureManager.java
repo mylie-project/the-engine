@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.features.async.*;
 import mylie.util.configuration.Configuration;
+
 @Slf4j
 public class FeatureManager {
     private final Configuration<Engine> engineConfiguration;
@@ -35,9 +35,9 @@ public class FeatureManager {
     }
 
     public void onUpdate() {
-        Set<Result<Boolean>> results=new HashSet<>();
+        Set<Result<Boolean>> results = new HashSet<>();
         for (Feature feature : featureList) {
-            if(feature instanceof BaseFeature baseFeature){
+            if (feature instanceof BaseFeature baseFeature) {
                 results.add(baseFeature.update());
             }
         }

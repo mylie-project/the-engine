@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.BaseFeature;
-import mylie.engine.core.Engine;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
 import mylie.util.configuration.Configuration;
@@ -31,7 +30,7 @@ public abstract class Timer extends BaseFeature implements Feature.Engine, Featu
     @Override
     protected void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
         super.onSetup(featureManager, engineConfiguration);
-        time=new DefaultTime(-1,0,0);
+        time = new DefaultTime(-1, 0, 0);
     }
 
     public void setAppTimeModifier(double modifier) {

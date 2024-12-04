@@ -72,7 +72,7 @@ public abstract class Scheduler extends BaseFeature implements Feature.Engine {
 
     @Override
     public void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
-        super.onSetup(featureManager,engineConfiguration);
+        super.onSetup(featureManager, engineConfiguration);
         registerCaches(Cache.Never, Cache.Forever, Cache.OneFrame, Cache.FrameId);
         Async.scheduler(this);
     }
