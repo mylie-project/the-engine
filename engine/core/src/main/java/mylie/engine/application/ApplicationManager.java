@@ -4,10 +4,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.CoreFeature;
+import mylie.engine.core.Engine;
+import mylie.engine.core.Engine.Barriers;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
+import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
@@ -33,8 +36,9 @@ public class ApplicationManager extends CoreFeature
         scheduler.registerTarget(Async.APPLICATION, applicationQueue::add);
         featureThread = scheduler.createFeatureThread(Async.APPLICATION, applicationQueue);
         featureThread.start();
-        runBefore(mylie.engine.core.Engine.Barriers.ApplicationLogic);
-        runAfter(mylie.engine.core.Engine.Barriers.FramePreparation);
+        runBefore(Barriers.ApplicationLogic);
+        runAfter(Barriers.FramePreparation);
+        runAfter(InputModule.class);
     }
 
     @Override

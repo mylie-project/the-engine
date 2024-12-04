@@ -10,9 +10,9 @@ public abstract class Result<R> {
     private int hash;
     private long frameId;
 
-    protected abstract R get();
+    public abstract R get();
 
-    protected abstract boolean isDone();
+    public abstract boolean isDone();
 
     @Setter(AccessLevel.PACKAGE)
     static class FixedResult<R> extends Result<R> {
@@ -25,7 +25,7 @@ public abstract class Result<R> {
         }
 
         @Override
-        protected R get() {
+        public R get() {
             if (value == null) {
                 throw new RuntimeException("See Async.executeTask");
             }
@@ -33,7 +33,7 @@ public abstract class Result<R> {
         }
 
         @Override
-        protected boolean isDone() {
+        public boolean isDone() {
             return true;
         }
     }

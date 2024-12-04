@@ -32,6 +32,11 @@ public class SchedulerSingleThreaded extends Scheduler implements Scheduler.Task
         return new NoOpThread();
     }
 
+    @Override
+    public void submitRunnable(Runnable runnable, Async.Target target) {
+        runnable.run();
+    }
+
     private static class AsyncResult<R> extends Result<R> {
         public AsyncResult(R result) {
             super();

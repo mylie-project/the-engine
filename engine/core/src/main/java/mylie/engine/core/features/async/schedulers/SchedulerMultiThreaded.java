@@ -20,6 +20,14 @@ public class SchedulerMultiThreaded extends Scheduler {
         return new BaseFeatureThread(target, queue);
     }
 
+    @Override
+    public void submitRunnable(Runnable runnable, Async.Target target) {
+        TaskExecutor taskExecutor = targets().get(target);
+        if(taskExecutor instanceof CallableExecutor callableExecutor){
+            callableExecutor.consumer().accept(runnable);
+        }
+    }
+
     record CallableExecutor(Consumer<Runnable> consumer, Async.Target target) implements TaskExecutor {
         @Override
         public <R> Result<R> execute(Tasks<R> task) {
