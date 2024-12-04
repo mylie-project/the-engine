@@ -5,14 +5,14 @@ import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.features.async.schedulers.VirtualThreadSchedulerSettings;
 import mylie.engine.core.features.timer.Timer;
-import mylie.engine.input.InputEvent;
-import mylie.engine.input.InputListener;
 import mylie.engine.input.InputManager;
+import mylie.engine.input.events.InputEvent;
+import mylie.engine.input.listeners.RawInputListener;
 import mylie.engine.platform.PlatformDesktop;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public class A0_HelloEngine extends BaseApplication implements InputListener.Raw {
+public class A0_HelloEngine extends BaseApplication implements RawInputListener {
 
     public static void main(String[] args) {
         PlatformDesktop platform = new PlatformDesktop();
@@ -25,7 +25,9 @@ public class A0_HelloEngine extends BaseApplication implements InputListener.Raw
     @Override
     protected void onInit() {
         log.info("On init");
-        getFeature(InputManager.class).addInputListener(this);
+        InputManager inputManager = getFeature(InputManager.class);
+        inputManager.addInputListener(this);
+        // inputManager.addMapping(MyAction, InputEvent.KeyboardEvent::)
     }
 
     @Override
