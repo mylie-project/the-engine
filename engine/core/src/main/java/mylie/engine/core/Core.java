@@ -39,10 +39,12 @@ public class Core {
     private <F extends Feature.Engine, S extends Feature.Settings<F>> void initFeature(Setting<Engine, S> setting) {
         S featureSettings = engineConfiguration.get(setting);
         F feature = featureSettings.build();
-        log.trace(
-                "Feature<{}> using {}",
-                feature.featureType().getSimpleName(),
-                feature.getClass().getSimpleName());
-        featureManager.add(feature);
+        if (feature instanceof BaseFeature baseFeature) {
+            log.trace(
+                    "Feature<{}> using {}",
+                    baseFeature.featureType().getSimpleName(),
+                    feature.getClass().getSimpleName());
+            featureManager.add(feature);
+        }
     }
 }

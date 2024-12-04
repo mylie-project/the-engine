@@ -38,9 +38,7 @@ public interface Feature {
     }
 
     interface Engine extends Feature {
-        Class<? extends Feature> featureType();
 
-        void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration);
     }
 
     interface Application extends Feature {}

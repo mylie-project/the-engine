@@ -10,7 +10,7 @@
 
     <logger name="mylie.engine.core.features.async" level="debug" />
 
-    <root level="trace">
+    <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

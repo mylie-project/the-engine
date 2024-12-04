@@ -1,10 +1,14 @@
 package mylie.engine.core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.features.async.*;
 import mylie.util.configuration.Configuration;
-
+@Slf4j
 public class FeatureManager {
     private final Configuration<Engine> engineConfiguration;
     private final List<Feature> featureList;
@@ -16,42 +20,27 @@ public class FeatureManager {
 
     public <F extends Feature> void add(F feature) {
         featureList.add(feature);
-        if (feature instanceof Feature.Engine engineFeature) {
-            engineFeature.onSetup(this, engineConfiguration);
+        if (feature instanceof BaseFeature baseFeature) {
+            baseFeature.onSetup(this, engineConfiguration);
         }
     }
 
-    public <F extends Feature> F get(Class<F> schedulerClass) {
+    public <F extends Feature> F get(Class<F> type) {
         for (Feature feature : featureList) {
-            if (schedulerClass.isAssignableFrom(feature.getClass())) {
-                return schedulerClass.cast(feature);
+            if (type.isAssignableFrom(feature.getClass())) {
+                return type.cast(feature);
             }
         }
         return null;
     }
 
     public void onUpdate() {
-        Async.await(Async.async(
-                Async.Mode.Async,
-                Cache.OneFrame,
-                Async.BACKGROUND,
-                0,
-                featureList,
-                Feature.Lifecycle.Update.class,
-                updateFunction));
-        // for (Feature feature : featureList) {
-        //    if(feature instanceof Feature.Lifecycle.Update updateFeature) {
-        //        updateFeature.onUpdate();
-        //    }
-        // }
+        Set<Result<Boolean>> results=new HashSet<>();
+        for (Feature feature : featureList) {
+            if(feature instanceof BaseFeature baseFeature){
+                results.add(baseFeature.update());
+            }
+        }
+        Async.await(results);
     }
-
-    private static Functions.F0<Boolean, Feature.Lifecycle.Update> updateFunction =
-            new Functions.F0<>("FeatureUpdateFunction") {
-                @Override
-                protected Boolean run(Feature.Lifecycle.Update o) {
-                    o.onUpdate();
-                    return true;
-                }
-            };
 }

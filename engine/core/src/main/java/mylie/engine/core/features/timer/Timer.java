@@ -5,19 +5,33 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.BaseFeature;
+import mylie.engine.core.Engine;
 import mylie.engine.core.Feature;
+import mylie.engine.core.FeatureManager;
+import mylie.util.configuration.Configuration;
 
 @Slf4j
 @Getter(AccessLevel.PROTECTED)
-public abstract class Timer implements Feature.Engine, Feature.Lifecycle.Update {
+public abstract class Timer extends BaseFeature implements Feature.Engine, Feature.Lifecycle.Update {
     protected static final double NANOSECONDS_IN_SECOND = TimeUnit.SECONDS.toNanos(1);
+
+    @Getter(AccessLevel.PUBLIC)
     private Time time;
+
     private final Settings settings;
     private float logInterval;
     private long count;
 
     protected Timer(Settings settings) {
+        super(Timer.class);
         this.settings = settings;
+    }
+
+    @Override
+    protected void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
+        super.onSetup(featureManager, engineConfiguration);
+        time=new DefaultTime(-1,0,0);
     }
 
     public void setAppTimeModifier(double modifier) {
@@ -35,11 +49,6 @@ public abstract class Timer implements Feature.Engine, Feature.Lifecycle.Update 
             count = 0;
             logInterval = 0;
         }
-    }
-
-    @Override
-    public Class<? extends Feature> featureType() {
-        return Timer.class;
     }
 
     protected abstract Time getNewTime();

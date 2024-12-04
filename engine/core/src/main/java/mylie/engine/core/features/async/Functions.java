@@ -27,6 +27,6 @@ public interface Functions {
             super(name);
         }
 
-        abstract R run(O o, P1 p1);
+        protected abstract R run(O o, P1 p1);
     }
 }

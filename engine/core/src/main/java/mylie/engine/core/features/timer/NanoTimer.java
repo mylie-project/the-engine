@@ -16,6 +16,7 @@ public class NanoTimer extends Timer {
 
     @Override
     public void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
+        super.onSetup(featureManager,engineConfiguration);
         t2 = System.nanoTime();
     }
 
