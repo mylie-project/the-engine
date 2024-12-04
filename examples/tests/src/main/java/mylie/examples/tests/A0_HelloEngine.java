@@ -30,9 +30,9 @@ public class A0_HelloEngine extends BaseApplication implements InputListener.Raw
 
     @Override
     public void onUpdate(Timer.Time time) {
-        //if (time.frameId() == 100) {
+        // if (time.frameId() == 100) {
         //    getFeature(EngineManager.class).shutdown(new Engine.ShutdownReason.UserRequest("All OK"));
-        //}
+        // }
     }
 
     void limitFPS(int fps) {

@@ -3,7 +3,6 @@ package mylie.engine.core;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.ApplicationManager;
 import mylie.engine.core.features.async.Scheduler;
-import mylie.engine.input.InputManager;
 import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
 import mylie.util.configuration.Setting;

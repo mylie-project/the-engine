@@ -17,6 +17,7 @@ public class InputModule extends CoreFeature implements InputManager, Feature.Li
     private final Queue<InputEvent> inputEvents;
     private final List<InputListener> inputListeners;
     private Scheduler scheduler;
+
     public InputModule() {
         super(InputModule.class);
         inputProviders = new CopyOnWriteArrayList<>();
@@ -52,15 +53,15 @@ public class InputModule extends CoreFeature implements InputManager, Feature.Li
         Timer.Time time = get(Timer.class).time();
         for (InputListener inputListener : inputListeners) {
             scheduler.submitRunnable(() -> inputListener.onEvent(event), Async.APPLICATION);
-            //Async seems slightly slower currently 4.12.2024
+            // Async seems slightly slower currently 4.12.2024
             /*Async.async(
-                    Async.Mode.Async,
-                    Cache.Never,
-                    Async.APPLICATION,
-                    time.frameId(),
-                    notifyListener,
-                    inputListener,
-                    event);*/
+            Async.Mode.Async,
+            Cache.Never,
+            Async.APPLICATION,
+            time.frameId(),
+            notifyListener,
+            inputListener,
+            event);*/
         }
     }
 

@@ -4,7 +4,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.CoreFeature;
-import mylie.engine.core.Engine;
 import mylie.engine.core.Engine.Barriers;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;

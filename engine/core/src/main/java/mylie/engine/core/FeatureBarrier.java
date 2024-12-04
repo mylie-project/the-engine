@@ -1,6 +1,5 @@
 package mylie.engine.core;
 
-import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Result;
 import mylie.util.configuration.Configuration;
 

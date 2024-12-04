@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -87,5 +86,5 @@ public abstract class Scheduler extends CoreFeature implements Feature.Core {
         <R> Result<R> execute(Tasks<R> task);
     }
 
-    public abstract void submitRunnable(Runnable runnable,Async.Target target);
+    public abstract void submitRunnable(Runnable runnable, Async.Target target);
 }

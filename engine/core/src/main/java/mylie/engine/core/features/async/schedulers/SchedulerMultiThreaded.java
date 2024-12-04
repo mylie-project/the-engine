@@ -23,7 +23,7 @@ public class SchedulerMultiThreaded extends Scheduler {
     @Override
     public void submitRunnable(Runnable runnable, Async.Target target) {
         TaskExecutor taskExecutor = targets().get(target);
-        if(taskExecutor instanceof CallableExecutor callableExecutor){
+        if (taskExecutor instanceof CallableExecutor callableExecutor) {
             callableExecutor.consumer().accept(runnable);
         }
     }
