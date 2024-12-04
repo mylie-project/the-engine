@@ -35,6 +35,8 @@ subprojects{
                     importOrder()
                     palantirJavaFormat()
                     formatAnnotations()
+                    trimTrailingWhitespace()
+                    endWithNewline()
                 }
             }
 

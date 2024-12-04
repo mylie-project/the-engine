@@ -5,14 +5,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.BaseFeature;
-import mylie.engine.core.Feature;
-import mylie.engine.core.FeatureManager;
+import mylie.engine.core.*;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
 @Getter(AccessLevel.PROTECTED)
-public abstract class Timer extends BaseFeature implements Feature.Engine, Feature.Lifecycle.Update {
+public abstract class Timer extends CoreFeature implements Feature.Core, Feature.Lifecycle.Update {
     protected static final double NANOSECONDS_IN_SECOND = TimeUnit.SECONDS.toNanos(1);
 
     @Getter(AccessLevel.PUBLIC)
@@ -31,6 +29,7 @@ public abstract class Timer extends BaseFeature implements Feature.Engine, Featu
     protected void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
         super.onSetup(featureManager, engineConfiguration);
         time = new DefaultTime(-1, 0, 0);
+        runBefore(mylie.engine.core.Engine.Barriers.FramePreparation);
     }
 
     public void setAppTimeModifier(double modifier) {
@@ -43,7 +42,6 @@ public abstract class Timer extends BaseFeature implements Feature.Engine, Featu
         logInterval += (float) time.delta();
         count++;
         if (logInterval > settings().fpsLogInterval()) {
-
             log.info("FPS: {}", count);
             count = 0;
             logInterval = 0;

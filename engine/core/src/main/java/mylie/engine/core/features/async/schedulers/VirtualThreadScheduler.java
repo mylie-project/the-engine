@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Result;
@@ -14,7 +15,8 @@ import mylie.engine.core.features.async.Tasks;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public class VirtualThreadScheduler extends SchedulerMultiThreaded implements Scheduler.TaskExecutor {
+public class VirtualThreadScheduler extends SchedulerMultiThreaded
+        implements Scheduler.TaskExecutor, Feature.Lifecycle.InitDestroy {
     final ExecutorService executorService;
 
     public VirtualThreadScheduler() {
@@ -31,6 +33,14 @@ public class VirtualThreadScheduler extends SchedulerMultiThreaded implements Sc
     public <R> Result<R> execute(Tasks<R> task) {
         Future<R> future = executorService.submit(task::execute);
         return new FutureResult<>(future);
+    }
+
+    @Override
+    public void onInit() {}
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdown();
     }
 
     @RequiredArgsConstructor

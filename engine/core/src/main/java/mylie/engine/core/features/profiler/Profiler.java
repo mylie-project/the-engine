@@ -2,7 +2,7 @@ package mylie.engine.core.features.profiler;
 
 import mylie.engine.core.Feature;
 
-public abstract class Profiler implements Feature.Engine {
+public abstract class Profiler implements Feature.Core {
 
     public interface Context {}
 

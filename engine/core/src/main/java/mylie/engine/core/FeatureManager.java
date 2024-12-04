@@ -34,13 +34,26 @@ public class FeatureManager {
         return null;
     }
 
+    public <T extends Feature> void remove(T feature) {
+        featureList.remove(feature);
+    }
+
     public void onUpdate() {
         Set<Result<Boolean>> results = new HashSet<>();
         for (Feature feature : featureList) {
-            if (feature instanceof BaseFeature baseFeature) {
+            if (feature instanceof FeatureBarrier baseFeature) {
                 results.add(baseFeature.update());
             }
         }
         Async.await(results);
+    }
+
+    public void onShutdown() {
+        Set<Result<Boolean>> results = new HashSet<>();
+        for (Feature feature : featureList) {
+            if (feature instanceof BaseFeature baseFeature) {
+                results.add(baseFeature.destroy());
+            }
+        }
     }
 }

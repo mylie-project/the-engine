@@ -4,17 +4,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.BaseFeature;
+import mylie.engine.core.CoreFeature;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.caches.ConcurrentMapCache;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public abstract class Scheduler extends BaseFeature implements Feature.Engine {
+public abstract class Scheduler extends CoreFeature implements Feature.Core {
     private final Cache.GlobalCache globalCache;
     private final Map<Async.Target, TaskExecutor> targets;
     private final Set<Cache> caches;
@@ -76,6 +77,8 @@ public abstract class Scheduler extends BaseFeature implements Feature.Engine {
         registerCaches(Cache.Never, Cache.Forever, Cache.OneFrame, Cache.FrameId);
         Async.scheduler(this);
     }
+
+    public abstract FeatureThread createFeatureThread(Async.Target target, BlockingQueue<Runnable> queue);
 
     public interface TaskExecutor {
         <R> Result<R> execute(Tasks<R> task);

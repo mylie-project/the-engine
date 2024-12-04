@@ -1,5 +1,9 @@
 package mylie.engine.core;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +18,10 @@ import mylie.util.configuration.Configuration;
 @Slf4j
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PACKAGE)
-public abstract class BaseFeature implements Feature {
+public abstract sealed class BaseFeature implements Feature permits CoreFeature, AppFeature {
     private final Class<? extends Feature> featureType;
     private boolean initialized = false, requestEnabled = false, alreadyEnabled = false;
+    private List<BaseFeature> dependencies;
     private FeatureManager featureManager;
     private Async.Target executionTarget;
     private Async.Mode executionMode;
@@ -24,9 +29,14 @@ public abstract class BaseFeature implements Feature {
 
     public BaseFeature(Class<? extends Feature> featureType) {
         this.featureType = featureType;
+        dependencies = new CopyOnWriteArrayList<>();
         executionTarget(Async.BACKGROUND);
         executionMode(Async.Mode.Direct);
         executionCache(Cache.OneFrame);
+    }
+
+    protected void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
+        featureManager(featureManager);
     }
 
     Result<Boolean> update() {
@@ -34,13 +44,55 @@ public abstract class BaseFeature implements Feature {
         return Async.async(executionMode, executionCache, executionTarget, time.frameId(), updateFunction, this, time);
     }
 
-    protected void onSetup(FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
-        featureManager(featureManager);
+    public Result<Boolean> destroy() {
+        Timer.Time time = get(Timer.class).time();
+        if (this instanceof Feature.Lifecycle.InitDestroy initDestroyFeature) {
+            return Async.async(executionMode, Cache.Never, executionTarget, time.frameId(), destroyFunction, this);
+        }
+        return null;
+    }
+
+    <T extends BaseFeature> void runAfter(Class<T> featureClass) {
+        T feature = get(featureClass);
+        dependencies.add(feature);
+    }
+
+    <T extends BaseFeature> void runBefore(Class<T> featureClass) {
+        T feature = get(featureClass);
+        feature.dependencies().add(this);
     }
 
     protected <T extends Feature> T get(Class<T> type) {
         return featureManager().get(type);
     }
+
+    protected <T extends Feature> BaseFeature add(T feature) {
+        featureManager.add(feature);
+        return this;
+    }
+
+    protected <T extends Feature> void remove(T feature) {
+        featureManager.remove(feature);
+    }
+
+    private static void waitForDependencies(BaseFeature baseFeature, Timer.Time time) {
+        Set<Result<Boolean>> results = new HashSet<>();
+        for (BaseFeature dependency : baseFeature.dependencies()) {
+            results.add(dependency.update());
+        }
+        Async.await(results);
+    }
+
+    private static Functions.F0<Boolean, BaseFeature> destroyFunction = new Functions.F0<>("FeatureDestroyFunction") {
+        @Override
+        protected Boolean run(BaseFeature feature) {
+            if (feature instanceof Feature.Lifecycle.InitDestroy initDestroyFeature) {
+                log.trace("Feature<{}>.onDestroy", feature.featureType().getSimpleName());
+                initDestroyFeature.onDestroy();
+            }
+            return true;
+        }
+    };
 
     private static Functions.F1<Boolean, BaseFeature, Timer.Time> updateFunction =
             new Functions.F1<>("FeatureUpdateFunction") {
@@ -55,7 +107,7 @@ public abstract class BaseFeature implements Feature {
                             initDestroyFeature.onInit();
                         }
                     }
-                    // waitForDependencies(baseFeature, time);
+                    waitForDependencies(feature, time);
                     if (feature instanceof Feature.Lifecycle.EnableDisable enableDisableFeature) {
                         if (feature.requestEnabled() != feature.alreadyEnabled()) {
                             if (feature.requestEnabled()) {

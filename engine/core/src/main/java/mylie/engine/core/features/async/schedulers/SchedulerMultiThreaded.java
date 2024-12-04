@@ -1,19 +1,23 @@
 package mylie.engine.core.features.async.schedulers;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import mylie.engine.core.features.async.Async;
-import mylie.engine.core.features.async.Result;
-import mylie.engine.core.features.async.Scheduler;
-import mylie.engine.core.features.async.Tasks;
+import mylie.engine.core.features.async.*;
 
 public class SchedulerMultiThreaded extends Scheduler {
 
     @Override
     public void registerTarget(Async.Target target, Consumer<Runnable> consumer) {
         registerTarget(target, new CallableExecutor(consumer, target));
+    }
+
+    @Override
+    public FeatureThread createFeatureThread(Async.Target target, BlockingQueue<Runnable> queue) {
+        return new BaseFeatureThread(target, queue);
     }
 
     record CallableExecutor(Consumer<Runnable> consumer, Async.Target target) implements TaskExecutor {
@@ -63,39 +67,40 @@ public class SchedulerMultiThreaded extends Scheduler {
         }
     }
 
-    /*static class BaseFeatureThread implements FeatureThread {
-    	final Async.Target target;
-    	final BlockingQueue<Runnable> taskQueue;
-    	final Thread thread;
-    	volatile boolean running;
-    	BaseFeatureThread(Async.Target target, BlockingQueue<Runnable> taskQueue) {
-    		this.target = target;
-    		this.taskQueue = taskQueue;
-    		this.thread = new Thread(this::loop, target.name());
-    	}
+    static class BaseFeatureThread implements FeatureThread {
+        final Async.Target target;
+        final BlockingQueue<Runnable> taskQueue;
+        final Thread thread;
+        volatile boolean running;
 
-    	private void loop() {
-    		while (running) {
-    			try {
-    				Runnable poll = taskQueue.poll(10, TimeUnit.MILLISECONDS);
-    				if (poll != null) {
-    					poll.run();
-    				}
-    			} catch (InterruptedException e) {
-    				throw new RuntimeException(e);
-    			}
-    		}
-    	}
+        BaseFeatureThread(Async.Target target, BlockingQueue<Runnable> taskQueue) {
+            this.target = target;
+            this.taskQueue = taskQueue;
+            this.thread = new Thread(this::loop, target.name());
+        }
 
-    	@Override
-    	public void start() {
-    		running = true;
-    		thread.start();
-    	}
+        private void loop() {
+            while (running) {
+                try {
+                    Runnable poll = taskQueue.poll(10, TimeUnit.MILLISECONDS);
+                    if (poll != null) {
+                        poll.run();
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
-    	@Override
-    	public void stop() {
-    		running = false;
-    	}
-    }*/
+        @Override
+        public void start() {
+            running = true;
+            thread.start();
+        }
+
+        @Override
+        public void stop() {
+            running = false;
+        }
+    }
 }

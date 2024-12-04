@@ -1,12 +1,10 @@
 package mylie.engine.core.features.async.schedulers;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.FeatureManager;
-import mylie.engine.core.features.async.Async;
-import mylie.engine.core.features.async.Result;
-import mylie.engine.core.features.async.Scheduler;
-import mylie.engine.core.features.async.Tasks;
+import mylie.engine.core.features.async.*;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
@@ -29,6 +27,11 @@ public class SchedulerSingleThreaded extends Scheduler implements Scheduler.Task
         registerTarget(Async.BACKGROUND, this);
     }
 
+    @Override
+    public FeatureThread createFeatureThread(Async.Target target, BlockingQueue<Runnable> queue) {
+        return new NoOpThread();
+    }
+
     private static class AsyncResult<R> extends Result<R> {
         public AsyncResult(R result) {
             super();
@@ -46,5 +49,14 @@ public class SchedulerSingleThreaded extends Scheduler implements Scheduler.Task
         public boolean isDone() {
             return true;
         }
+    }
+
+    private static class NoOpThread implements FeatureThread {
+
+        @Override
+        public void start() {}
+
+        @Override
+        public void stop() {}
     }
 }

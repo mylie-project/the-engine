@@ -36,7 +36,7 @@ public interface Feature {
         T build();
     }
 
-    interface Engine extends Feature {}
+    interface Core extends Feature {}
 
-    interface Application extends Feature {}
+    interface App extends Feature {}
 }

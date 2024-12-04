@@ -2,6 +2,7 @@ package mylie.engine.core;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.application.Application;
 import mylie.engine.core.features.async.schedulers.SchedulerSettings;
 import mylie.engine.core.features.timer.NanoTimer;
 import mylie.engine.core.features.timer.Timer;
@@ -13,12 +14,17 @@ import mylie.util.configuration.Setting;
 public class Engine {
     public static final BuildInfo buildInfo = new BuildInfo();
     public static final ShutdownReason Restart = new ShutdownReason.UserRequest("Restart");
-    public static final ShutdownReason Shutdown = new ShutdownReason.UserRequest("Shutdown");
+
+    public interface Barriers {
+        Class<? extends FeatureBarrier> FramePreparation = FeatureBarrier.FramePreparation.class;
+        Class<? extends FeatureBarrier> ApplicationLogic = FeatureBarrier.AppLogic.class;
+    }
 
     public interface Settings {
         Setting<Engine, SchedulerSettings> Scheduler = new Setting<>("Scheduler", SchedulerSettings.class, true, null);
         Setting<Engine, Timer.Settings> Timer =
                 new Setting<>("Timer", Timer.Settings.class, true, new NanoTimer.Settings());
+        Setting<Engine, Application> Application = new Setting<>("Application", Application.class, false, null);
     }
 
     public static ShutdownReason start(
@@ -57,7 +63,7 @@ public class Engine {
             this.message = message;
         }
 
-        protected static class UserRequest extends ShutdownReason {
+        public static class UserRequest extends ShutdownReason {
             public UserRequest(String message) {
                 super(message);
             }

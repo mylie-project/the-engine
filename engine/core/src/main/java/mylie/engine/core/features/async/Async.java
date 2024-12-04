@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class Async {
     public static Target BACKGROUND = new Target("Background");
+    public static Target ENGINE = new Target("Engine");
+    public static Target APPLICATION = new Target("Application");
 
     @Setter(AccessLevel.PACKAGE)
     private static Scheduler scheduler;
@@ -100,8 +102,11 @@ public final class Async {
     private static <R> Result<R> executeTask(
             Tasks<R> tasks, Mode mode, int hashCode, long frameId, Cache cache, Target target) {
         if (mode == Mode.Direct) {
+            // To avoid a dependency loop we have to set set the cache result before executing the task.
+            // Not sure yet if this leads to possible null results..
             Result.FixedResult<R> result = new Result.FixedResult<>(hashCode, frameId, tasks.execute());
             cache.set(hashCode, result);
+            // result.value = tasks.execute();
             return result;
         } else {
             return scheduler.executeTask(tasks, hashCode, frameId, cache, target);
