@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.BaseFeature;
 import mylie.engine.core.CoreFeature;
 import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
@@ -17,7 +18,7 @@ import mylie.util.configuration.Configuration;
 
 @Slf4j
 @Getter(AccessLevel.PROTECTED)
-public abstract class Scheduler extends CoreFeature implements Feature.Core {
+public abstract class Scheduler extends CoreFeature implements BaseFeature.Core {
     private final Cache.GlobalCache globalCache;
     private final Map<Async.Target, TaskExecutor> targets;
     private final Set<Cache> caches;

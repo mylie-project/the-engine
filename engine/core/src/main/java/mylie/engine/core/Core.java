@@ -44,7 +44,7 @@ public class Core implements EngineManager {
         featureManager.add(new ApplicationManager());
     }
 
-    private <F extends Feature.Core, S extends Feature.Settings<F>> void initFeature(Setting<Engine, S> setting) {
+    private <F extends BaseFeature.Core, S extends Feature.Settings<F>> void initFeature(Setting<Engine, S> setting) {
         S featureSettings = engineConfiguration.get(setting);
         F feature = featureSettings.build();
         if (feature instanceof BaseFeature baseFeature) {

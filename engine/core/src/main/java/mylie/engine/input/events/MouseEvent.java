@@ -1,3 +1,3 @@
 package mylie.engine.input.events;
 
-public abstract class MouseEvent {}
+abstract class MouseEvent {}

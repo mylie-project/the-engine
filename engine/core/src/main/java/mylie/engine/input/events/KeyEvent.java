@@ -7,7 +7,7 @@ import mylie.engine.input.Input;
 @AllArgsConstructor
 @Getter
 @Setter(AccessLevel.PROTECTED)
-public class KeyEvent extends KeyboardEvent {
+class KeyEvent extends KeyboardEvent {
     public enum Type {
         PRESSED,
         RELEASED,

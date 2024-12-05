@@ -5,16 +5,15 @@ import java.util.concurrent.LinkedTransferQueue;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.CoreFeature;
 import mylie.engine.core.Engine.Barriers;
-import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
+import mylie.engine.core.Lifecycle;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public class ApplicationManager extends CoreFeature
-        implements Feature.Lifecycle.Update.Timed, Feature.Lifecycle.InitDestroy {
+public class ApplicationManager extends CoreFeature implements Lifecycle.Update.Timed, Lifecycle.InitDestroy {
     private boolean applicationInitialized = false;
     private mylie.engine.application.Application application;
     private mylie.engine.application.Application.Manager appFeatureManager;

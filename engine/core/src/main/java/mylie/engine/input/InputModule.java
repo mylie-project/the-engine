@@ -3,10 +3,7 @@ package mylie.engine.input;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.CoreFeature;
-import mylie.engine.core.Engine;
-import mylie.engine.core.Feature;
-import mylie.engine.core.FeatureManager;
+import mylie.engine.core.*;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.input.events.InputEvent;
@@ -14,7 +11,7 @@ import mylie.engine.input.listeners.InputListener;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public class InputModule extends CoreFeature implements InputManager, Feature.Lifecycle.Update.Timed {
+public class InputModule extends CoreFeature implements InputManager, Lifecycle.Update.Timed {
     private final List<Provider> inputProviders;
     private final Queue<InputEvent> inputEvents;
     private final List<InputListener> inputListeners;

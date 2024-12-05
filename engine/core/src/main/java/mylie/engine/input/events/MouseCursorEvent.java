@@ -7,6 +7,6 @@ import org.joml.Vector2ic;
 @AllArgsConstructor
 @Getter
 @Setter(AccessLevel.PROTECTED)
-public class MouseCursorEvent extends MouseEvent {
+class MouseCursorEvent extends MouseEvent {
     Vector2ic position;
 }

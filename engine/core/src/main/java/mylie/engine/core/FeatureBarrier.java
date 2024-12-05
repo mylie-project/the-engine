@@ -3,7 +3,7 @@ package mylie.engine.core;
 import mylie.engine.core.features.async.Result;
 import mylie.util.configuration.Configuration;
 
-public class FeatureBarrier extends CoreFeature implements Feature.App {
+public class FeatureBarrier extends CoreFeature implements BaseFeature.App {
 
     protected FeatureBarrier(Class<? extends Feature> featureType) {
         super(featureType);

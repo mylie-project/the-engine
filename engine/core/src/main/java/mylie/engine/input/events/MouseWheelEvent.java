@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter(AccessLevel.PROTECTED)
-public class MouseWheelEvent extends MouseEvent {
+class MouseWheelEvent extends MouseEvent {
     public enum WheelAxis {
         X,
         Y,

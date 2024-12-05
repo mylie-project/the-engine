@@ -6,8 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
+import mylie.engine.core.Lifecycle;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Result;
 import mylie.engine.core.features.async.Scheduler;
@@ -16,7 +16,7 @@ import mylie.util.configuration.Configuration;
 
 @Slf4j
 public class VirtualThreadScheduler extends SchedulerMultiThreaded
-        implements Scheduler.TaskExecutor, Feature.Lifecycle.InitDestroy {
+        implements Scheduler.TaskExecutor, Lifecycle.InitDestroy {
     final ExecutorService executorService;
 
     public VirtualThreadScheduler() {

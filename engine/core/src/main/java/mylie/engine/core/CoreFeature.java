@@ -2,7 +2,7 @@ package mylie.engine.core;
 
 import mylie.engine.core.features.async.Async;
 
-public non-sealed class CoreFeature extends BaseFeature implements Feature.Core {
+public non-sealed class CoreFeature extends BaseFeature implements BaseFeature.Core {
     public CoreFeature(Class<? extends Feature> featureType) {
         super(featureType);
     }

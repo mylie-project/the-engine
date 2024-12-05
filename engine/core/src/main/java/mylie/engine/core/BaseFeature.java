@@ -46,7 +46,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
 
     public Result<Boolean> destroy() {
         Timer.Time time = get(Timer.class).time();
-        if (this instanceof Feature.Lifecycle.InitDestroy initDestroyFeature) {
+        if (this instanceof Lifecycle.InitDestroy initDestroyFeature) {
             return Async.async(executionMode, Cache.Never, executionTarget, time.frameId(), destroyFunction, this);
         }
         return null;
@@ -75,6 +75,10 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
         featureManager.remove(feature);
     }
 
+    public interface Core extends Feature {}
+
+    public interface App extends Feature {}
+
     private static void waitForDependencies(BaseFeature baseFeature, Timer.Time time) {
         Set<Result<Boolean>> results = new HashSet<>();
         for (BaseFeature dependency : baseFeature.dependencies()) {
@@ -86,7 +90,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
     private static Functions.F0<Boolean, BaseFeature> destroyFunction = new Functions.F0<>("FeatureDestroyFunction") {
         @Override
         protected Boolean run(BaseFeature feature) {
-            if (feature instanceof Feature.Lifecycle.InitDestroy initDestroyFeature) {
+            if (feature instanceof Lifecycle.InitDestroy initDestroyFeature) {
                 log.trace("Feature<{}>.onDestroy", feature.featureType().getSimpleName());
                 initDestroyFeature.onDestroy();
             }
@@ -100,7 +104,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
                 public Boolean run(BaseFeature feature, Timer.Time time) {
                     if (!feature.initialized()) {
                         feature.initialized(true);
-                        if (feature instanceof Feature.Lifecycle.InitDestroy initDestroyFeature) {
+                        if (feature instanceof Lifecycle.InitDestroy initDestroyFeature) {
                             log.trace(
                                     "Feature<{}>.onInit()",
                                     feature.featureType().getSimpleName());
@@ -108,7 +112,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
                         }
                     }
                     waitForDependencies(feature, time);
-                    if (feature instanceof Feature.Lifecycle.EnableDisable enableDisableFeature) {
+                    if (feature instanceof Lifecycle.EnableDisable enableDisableFeature) {
                         if (feature.requestEnabled() != feature.alreadyEnabled()) {
                             if (feature.requestEnabled()) {
                                 log.trace(
@@ -130,7 +134,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
                         }
                     }
 
-                    if (feature instanceof Feature.Lifecycle.Update updatableFeature) {
+                    if (feature instanceof Lifecycle.Update updatableFeature) {
                         log.trace(
                                 "Feature<{}>.onUpdate()", feature.featureType().getSimpleName());
                         updatableFeature.onUpdate();

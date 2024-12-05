@@ -10,7 +10,7 @@ import mylie.util.configuration.Configuration;
 
 @Slf4j
 @Getter(AccessLevel.PROTECTED)
-public abstract class Timer extends CoreFeature implements Feature.Core, Feature.Lifecycle.Update {
+public abstract class Timer extends CoreFeature implements BaseFeature.Core, Lifecycle.Update {
     protected static final double NANOSECONDS_IN_SECOND = TimeUnit.SECONDS.toNanos(1);
 
     @Getter(AccessLevel.PUBLIC)

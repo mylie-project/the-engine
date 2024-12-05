@@ -1,8 +1,8 @@
 package mylie.engine.application;
 
 import lombok.extern.slf4j.Slf4j;
+import mylie.engine.core.BaseFeature;
 import mylie.engine.core.CoreFeature;
-import mylie.engine.core.Feature;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.timer.Timer;
 
@@ -21,17 +21,17 @@ public interface Application {
             this.featureManager = featureManager;
         }
 
-        public <T extends Feature.App> T getFeature(Class<T> type) {
+        public <T extends BaseFeature.App> T getFeature(Class<T> type) {
             return featureManager.get(type);
         }
 
-        public <T extends Feature.App> Manager addFeature(T feature) {
+        public <T extends BaseFeature.App> Manager addFeature(T feature) {
             featureManager.add(feature);
             return this;
         }
 
-        public <T extends Feature.App> void removeFeature(T feature) {
-            Feature.App toRemove = featureManager.get(feature.getClass());
+        public <T extends BaseFeature.App> void removeFeature(T feature) {
+            BaseFeature.App toRemove = featureManager.get(feature.getClass());
             if (toRemove instanceof CoreFeature) {
                 log.warn("Not allowed to remove EngineFeature {}", toRemove.getClass());
                 return;

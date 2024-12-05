@@ -3,7 +3,7 @@ package mylie.engine.core;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public sealed class AppFeature extends BaseFeature implements Feature.App
+public sealed class AppFeature extends BaseFeature implements BaseFeature.App
         permits AppFeature.Sequential, AppFeature.Async {
     public AppFeature(Class<? extends Feature> featureType) {
         super(featureType);

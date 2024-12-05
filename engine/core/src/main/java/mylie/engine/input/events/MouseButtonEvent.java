@@ -7,7 +7,7 @@ import mylie.engine.input.Input;
 @AllArgsConstructor
 @Getter
 @Setter(AccessLevel.PROTECTED)
-public class MouseButtonEvent extends MouseEvent {
+class MouseButtonEvent extends MouseEvent {
     public enum Type {
         PRESSED,
         RELEASED,

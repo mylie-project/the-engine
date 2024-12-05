@@ -1,9 +1,9 @@
 package mylie.engine.input;
 
-import mylie.engine.core.Feature;
+import mylie.engine.core.BaseFeature;
 import mylie.engine.input.listeners.InputListener;
 
-public interface InputManager extends Feature.App {
+public interface InputManager extends BaseFeature.App {
     InputManager addInputListener(InputListener listener);
 
     InputManager removeInputListener(InputListener listener);
