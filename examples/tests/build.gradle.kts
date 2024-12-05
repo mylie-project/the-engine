@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation(project(":core"))
     implementation(project(":platform.desktop"))
+    implementation(project(":lwjgl3.opengl"))
     runtimeOnly(libs.logging.runtime)
 }
 

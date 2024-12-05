@@ -3,6 +3,7 @@ package mylie.engine.core;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.ApplicationManager;
 import mylie.engine.core.features.async.Scheduler;
+import mylie.engine.graphics.GraphicsModule;
 import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
 import mylie.util.configuration.Setting;
@@ -42,6 +43,7 @@ public class Core implements EngineManager {
         initFeature(Engine.Settings.Timer);
         featureManager.add(new InputModule());
         featureManager.add(new ApplicationManager());
+        featureManager.add(new GraphicsModule());
     }
 
     private <F extends BaseFeature.Core, S extends Feature.Settings<F>> void initFeature(Setting<Engine, S> setting) {

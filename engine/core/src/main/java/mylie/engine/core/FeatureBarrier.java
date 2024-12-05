@@ -35,8 +35,36 @@ public class FeatureBarrier extends CoreFeature implements BaseFeature.App {
         }
     }
 
+    public static class AppRendering extends FeatureBarrier {
+        protected AppRendering() {
+            super(AppRendering.class);
+        }
+
+        @Override
+        protected void onSetup(
+                FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
+            super.onSetup(featureManager, engineConfiguration);
+            runAfter(AppLogic.class);
+        }
+    }
+
+    public static class FrameComplete extends FeatureBarrier {
+        protected FrameComplete() {
+            super(AppRendering.class);
+        }
+
+        @Override
+        protected void onSetup(
+                FeatureManager featureManager, Configuration<mylie.engine.core.Engine> engineConfiguration) {
+            super.onSetup(featureManager, engineConfiguration);
+            runAfter(AppRendering.class);
+        }
+    }
+
     public static void initDefaults(FeatureManager featureManager) {
         featureManager.add(new FramePreparation());
         featureManager.add(new AppLogic());
+        featureManager.add(new AppRendering());
+        featureManager.add(new FrameComplete());
     }
 }

@@ -6,6 +6,7 @@ import mylie.engine.application.Application;
 import mylie.engine.core.features.async.schedulers.SchedulerSettings;
 import mylie.engine.core.features.timer.NanoTimer;
 import mylie.engine.core.features.timer.Timer;
+import mylie.engine.graphics.GraphicsApiSettings;
 import mylie.util.BuildInfo;
 import mylie.util.configuration.Configuration;
 import mylie.util.configuration.Setting;
@@ -25,6 +26,8 @@ public class Engine {
         Setting<Engine, Timer.Settings> Timer =
                 new Setting<>("Timer", Timer.Settings.class, true, new NanoTimer.Settings());
         Setting<Engine, Application> Application = new Setting<>("Application", Application.class, false, null);
+        Setting<Engine, GraphicsApiSettings> GraphicsApi =
+                new Setting<>("GraphicsApi", GraphicsApiSettings.class, true, null);
     }
 
     public static ShutdownReason start(

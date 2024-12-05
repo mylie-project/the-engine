@@ -140,8 +140,9 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
                         updatableFeature.onUpdate();
                     } else if (feature instanceof Lifecycle.Update.Timed timedUpdatableFeature) {
                         log.trace(
-                                "Feature<{}>.onUpdate(time)",
-                                feature.featureType().getSimpleName());
+                                "Feature<{}>.onUpdate({})",
+                                feature.featureType().getSimpleName(),
+                                time.getClass().getSimpleName());
                         timedUpdatableFeature.onUpdate(time);
                     }
                     return true;

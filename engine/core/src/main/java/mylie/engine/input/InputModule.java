@@ -11,7 +11,7 @@ import mylie.engine.input.listeners.InputListener;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
-public class InputModule extends CoreFeature implements InputManager, Lifecycle.Update.Timed {
+public class InputModule extends CoreFeature implements Lifecycle.Update.Timed {
     private final List<Provider> inputProviders;
     private final Queue<InputEvent> inputEvents;
     private final List<InputListener> inputListeners;
@@ -29,6 +29,7 @@ public class InputModule extends CoreFeature implements InputManager, Lifecycle.
         super.onSetup(featureManager, engineConfiguration);
         scheduler = get(Scheduler.class);
         runAfter(Engine.Barriers.FramePreparation);
+        add(new Internal());
     }
 
     @Override
@@ -64,32 +65,35 @@ public class InputModule extends CoreFeature implements InputManager, Lifecycle.
         }
     }
 
-    @Override
-    public InputManager addInputListener(InputListener listener) {
-        inputListeners.add(listener);
-        return this;
-    }
-
-    @Override
-    public InputManager removeInputListener(InputListener listener) {
-        inputListeners.remove(listener);
-        return this;
-    }
-
-    @Override
-    public InputManager addInputProvider(Provider provider) {
-        inputProviders.add(provider);
-        return this;
-    }
-
-    @Override
-    public InputManager removeInputProvider(Provider provider) {
-        inputProviders.remove(provider);
-        return this;
-    }
-
     public interface Provider {
         Result<Collection<InputEvent>> getEvents();
+    }
+
+    class Internal implements InputManager {
+
+        @Override
+        public InputManager addInputListener(InputListener listener) {
+            inputListeners.add(listener);
+            return this;
+        }
+
+        @Override
+        public InputManager removeInputListener(InputListener listener) {
+            inputListeners.remove(listener);
+            return this;
+        }
+
+        @Override
+        public InputManager addInputProvider(Provider provider) {
+            inputProviders.add(provider);
+            return this;
+        }
+
+        @Override
+        public InputManager removeInputProvider(Provider provider) {
+            inputProviders.remove(provider);
+            return this;
+        }
     }
 
     private static final Functions.F1<Boolean, InputListener, InputEvent> notifyListener =

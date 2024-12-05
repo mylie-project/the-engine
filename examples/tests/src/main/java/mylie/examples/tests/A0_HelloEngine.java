@@ -5,10 +5,13 @@ import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.features.async.schedulers.VirtualThreadSchedulerSettings;
 import mylie.engine.core.features.timer.Timer;
+import mylie.engine.graphics.Graphics;
+import mylie.engine.graphics.GraphicsManager;
 import mylie.engine.input.InputManager;
 import mylie.engine.input.events.InputEvent;
 import mylie.engine.input.listeners.RawInputListener;
 import mylie.engine.platform.PlatformDesktop;
+import mylie.lwjgl3.opengl.OpenglSettings;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
@@ -19,6 +22,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         Configuration<Engine> engineConfiguration = platform.initialize();
         engineConfiguration.set(Engine.Settings.Scheduler, new VirtualThreadSchedulerSettings());
         engineConfiguration.set(Engine.Settings.Application, new A0_HelloEngine());
+        engineConfiguration.set(Engine.Settings.GraphicsApi, new OpenglSettings());
         Engine.ShutdownReason start = Engine.start(engineConfiguration, true, false);
     }
 
@@ -27,23 +31,12 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         log.info("On init");
         InputManager inputManager = getFeature(InputManager.class);
         inputManager.addInputListener(this);
-        // inputManager.addMapping(MyAction, InputEvent.KeyboardEvent::)
+        GraphicsManager graphicsManager = getFeature(GraphicsManager.class);
+        Graphics.Display display = graphicsManager.primaryDisplay();
     }
 
     @Override
-    public void onUpdate(Timer.Time time) {
-        // if (time.frameId() == 100) {
-        //    getFeature(EngineManager.class).shutdown(new Engine.ShutdownReason.UserRequest("All OK"));
-        // }
-    }
-
-    void limitFPS(int fps) {
-        try {
-            Thread.sleep(1000 / fps);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public void onUpdate(Timer.Time time) {}
 
     @Override
     public void onDestroy() {
