@@ -57,6 +57,31 @@ public final class Async {
         return result;
     }
 
+    public static <R, O, P1, P2> Result<R> async(
+            Mode mode,
+            Cache cache,
+            Target target,
+            long frameId,
+            Functions.F2<R, O, P1, P2> function,
+            O object,
+            P1 p1,
+            P2 p2) {
+        int hashCode = getHashCode(function, object);
+        Result<R> result = cache.get(frameId, hashCode);
+        log.trace(
+                "Function<{}>({},{},{}): Hash={} Cache={}",
+                function.name(),
+                object.getClass().getSimpleName(),
+                p1.getClass().getSimpleName(),
+                p2.getClass().getSimpleName(),
+                hashCode,
+                result != null);
+        if (result == null) {
+            result = executeTask(new Tasks.T2<>(function, object, p1, p2), mode, hashCode, frameId, cache, target);
+        }
+        return result;
+    }
+
     public static <R, T> Iterable<Result<R>> async(
             Mode mode,
             Cache cache,

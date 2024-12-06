@@ -45,6 +45,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         configuration.set(GraphicsContext.Parameters.AlwaysOnTop, true);
         configuration.set(GraphicsContext.Parameters.Title, "Hello Engine");
         configuration.set(GraphicsContext.Parameters.VideoMode, videoMode);
+        configuration.set(GraphicsContext.Parameters.VSync, true);
         graphicsContext = graphicsManager.createContext(configuration, true);
     }
 
@@ -61,6 +62,14 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         if (event instanceof InputEvent.Keyboard.Key keyEvent) {
             if (keyEvent.key().equals(Input.Key.ESCAPE)) {
                 getFeature(EngineManager.class).shutdown(new Engine.ShutdownReason.UserRequest("Escape"));
+            }
+            if (keyEvent.key().equals(Input.Key.ENTER) && keyEvent.type() == InputEvent.Keyboard.Key.Type.PRESSED) {
+                log.trace("VSync");
+                graphicsContext
+                        .configuration()
+                        .set(
+                                GraphicsContext.Parameters.VSync,
+                                !graphicsContext.configuration().get(GraphicsContext.Parameters.VSync));
             }
         }
     }

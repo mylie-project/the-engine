@@ -30,7 +30,10 @@ public class GlfwContext extends GraphicsContext {
     }
 
     @Override
-    protected void applySettings() {}
+    protected <T> void onSettingChanged(Configuration.Parameter<T> parameter, T value) {
+        DataTypes.GlfwContextParameter<Object> glfwParameter = (DataTypes.GlfwContextParameter<Object>) parameter;
+        Async.async(Async.Mode.Async, Cache.Never, target(), -1, ApplySettings, handle, glfwParameter, value);
+    }
 
     protected Result<Boolean> destroy() {
         return Async.async(Async.Mode.Async, Cache.Never, Async.ENGINE, -1, ShutdownContext, this);
@@ -58,21 +61,33 @@ public class GlfwContext extends GraphicsContext {
         return Async.async(Async.Mode.Async, Cache.Never, target(), -1, Release, this);
     }
 
-    public static Functions.F0<Boolean, GlfwContext> ApplySettings = new Functions.F0<>("ApplySettings") {
+    public static Functions.F2<Boolean, Long, DataTypes.GlfwContextParameter<Object>, Object> ApplySettings =
+            new Functions.F2<>("ApplySettings") {
 
-        @Override
-        protected Boolean run(GlfwContext o) {
-            o.provider.applySettings(o);
-            return true;
-        }
-    };
+                @Override
+                protected Boolean run(Long handle, DataTypes.GlfwContextParameter<Object> parameter, Object value) {
+                    if (parameter.windowHint() != -1) {
+                        int v = 0;
+                        if (value instanceof Boolean) {
+                            v = ((Boolean) value) ? 1 : 0;
+                        } else if (value instanceof Integer) {
+                            v = (Integer) value;
+                        }
+                        GLFW.glfwWindowHint(parameter.windowHint(), v);
+                    } else if (parameter.consumer() != null) {
+                        parameter.consumer().accept(handle, value);
+                    }
+                    return true;
+                }
+            };
 
     public static Functions.F0<Boolean, GlfwContext> MakeCurrent = new Functions.F0<>("MakeCurrent") {
 
         @Override
         protected Boolean run(GlfwContext o) {
             GLFW.glfwMakeContextCurrent(o.handle);
-            GLFW.glfwSwapInterval(0);
+            Boolean vsync = o.configuration().get(Parameters.VSync);
+            GLFW.glfwSwapInterval(vsync ? 1 : 0);
             return true;
         }
     };

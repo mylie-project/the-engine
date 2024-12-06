@@ -105,11 +105,11 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             if (parameter instanceof DataTypes.GlfwContextParameter<?> glfwParameter) {
                 if (glfwParameter.windowHint() != -1) {
                     Object o = configuration.get(parameter);
-                    int value=0;
-                    if(o instanceof Boolean){
-                        value=((Boolean)o)?1:0;
-                    }else if(o instanceof Integer){
-                        value=(Integer)o;
+                    int value = 0;
+                    if (o instanceof Boolean) {
+                        value = ((Boolean) o) ? 1 : 0;
+                    } else if (o instanceof Integer) {
+                        value = (Integer) o;
                     }
                     GLFW.glfwWindowHint(glfwParameter.windowHint(), value);
                 }
@@ -138,7 +138,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         } else if (videoMode instanceof GraphicsContext.VideoMode.Fullscreen fullscreenMode) {
             fullscreen = true;
             size = fullscreenMode.videoMode().resolution();
-            display=((DataTypes.GlfwDisplay)fullscreenMode.display()).handle();
+            display = ((DataTypes.GlfwDisplay) fullscreenMode.display()).handle();
         }
 
         if (parent != NULL) {

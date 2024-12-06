@@ -31,4 +31,17 @@ public abstract class Tasks<R> {
             return function.run(object, param1);
         }
     }
+
+    @AllArgsConstructor
+    public static class T2<R, O, P1, P2> extends Tasks<R> {
+        Functions.F2<R, O, P1, P2> function;
+        O object;
+        P1 param1;
+        P2 param2;
+
+        @Override
+        public R onExecute() {
+            return function.run(object, param1, param2);
+        }
+    }
 }

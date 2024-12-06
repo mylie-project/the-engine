@@ -28,7 +28,7 @@ public abstract class GraphicsContext {
         featureThread = scheduler.createFeatureThread(target(), queue());
     }
 
-    protected abstract void applySettings();
+    protected abstract <T> void onSettingChanged(Configuration.Parameter<T> parameter, T value);
 
     protected abstract Result<Boolean> destroy();
 
@@ -56,7 +56,11 @@ public abstract class GraphicsContext {
         }
 
         public <T> void set(Parameter<T> parameter, T value) {
+            boolean changed = !value.equals(parameters.get(parameter));
             parameters.put(parameter, value);
+            if (context != null && changed) {
+                context.onSettingChanged(parameter, value);
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -82,7 +86,7 @@ public abstract class GraphicsContext {
 
         record Fullscreen(Graphics.Display display, Graphics.Display.VideoMode videoMode) implements VideoMode {}
 
-        record Windowed(Graphics.Display display, Vector2ic size,Vector2ic position) implements VideoMode {
+        record Windowed(Graphics.Display display, Vector2ic size, Vector2ic position) implements VideoMode {
             public static final Vector2ic Centered = new Vector2i(0, 0);
         }
 
