@@ -26,10 +26,9 @@ public class OpenglContextProvider extends GlfwContextProvider {
             new Functions.F1<>("CreateContext") {
                 @Override
                 protected Boolean run(OpenglContextProvider o, GlfwContext glfwContext) {
-                    o.setupContext(glfwContext, true);
+                    o.setupContext(glfwContext);
                     o.setupApi(glfwContext);
-                    boolean result = o.createWindow(glfwContext);
-                    return result;
+                    return o.createWindow(glfwContext);
                 }
             };
 }
