@@ -1,9 +1,6 @@
 package mylie.engine.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.features.async.*;
 import mylie.util.configuration.Configuration;
@@ -55,6 +52,7 @@ public class FeatureManager {
                 results.add(baseFeature.destroy());
             }
         }
-        Async.await(results);
+        List<Result<Boolean>> list = results.stream().filter(Objects::nonNull).toList();
+        Async.await(list);
     }
 }

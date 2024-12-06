@@ -62,7 +62,6 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             ByteBuffer[] imageBuffers = new ByteBuffer[icons.paths().length];
             for (int i = 0; i < icons.paths().length; i++) {
                 try {
-                    log.info(icons.paths()[i]);
                     buffers[i] = IOUtil.ioResourceToByteBuffer(icons.paths()[i], 10000);
                 } catch (IOException e) {
                     log.error(e.getLocalizedMessage());

@@ -56,6 +56,12 @@ public class GlfwInputProvider implements InputModule.Provider {
                     case GLFW.GLFW_REPEAT -> InputEvent.Keyboard.Key.Type.LONG_PRESSED;
                     default -> throw new IllegalStateException("Unexpected value: " + action);
                 };
+        int modifiers = getModifiers(mods);
+        this.mods = modifiers;
+        eventList.add(new InputEvent.Keyboard.Key(getContext(window), defaultKeyboard, key, engineType, modifiers));
+    }
+
+    private static int getModifiers(int mods) {
         int modifiers = 0;
         if ((mods & GLFW.GLFW_MOD_SHIFT) != 0) {
             modifiers |= 1 << InputEvent.Keyboard.Key.Modifier.SHIFT.ordinal();
@@ -75,8 +81,7 @@ public class GlfwInputProvider implements InputModule.Provider {
         if ((mods & GLFW.GLFW_MOD_NUM_LOCK) != 0) {
             modifiers |= 1 << InputEvent.Keyboard.Key.Modifier.NUM_LOCK.ordinal();
         }
-        this.mods = modifiers;
-        eventList.add(new InputEvent.Keyboard.Key(getContext(window), defaultKeyboard, key, engineType, modifiers));
+        return modifiers;
     }
 
     public void mouseButtonCallback(long window, int button, int action, int mods) {

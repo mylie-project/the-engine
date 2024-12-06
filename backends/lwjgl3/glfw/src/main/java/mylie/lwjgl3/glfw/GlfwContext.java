@@ -67,7 +67,7 @@ public class GlfwContext extends GraphicsContext {
         return Async.async(Async.Mode.Async, Cache.Never, target(), -1, Release, this);
     }
 
-    public static Functions.F2<Boolean, Long, DataTypes.GlfwContextParameter<Object>, Object> ApplySettings =
+    public static final Functions.F2<Boolean, Long, DataTypes.GlfwContextParameter<Object>, Object> ApplySettings =
             new Functions.F2<>("ApplySettings") {
 
                 @Override
@@ -87,7 +87,7 @@ public class GlfwContext extends GraphicsContext {
                 }
             };
 
-    public static Functions.F0<Boolean, GlfwContext> MakeCurrent = new Functions.F0<>("MakeCurrent") {
+    public static final Functions.F0<Boolean, GlfwContext> MakeCurrent = new Functions.F0<>("MakeCurrent") {
 
         @Override
         protected Boolean run(GlfwContext o) {
@@ -98,7 +98,7 @@ public class GlfwContext extends GraphicsContext {
         }
     };
 
-    public static Functions.F0<Boolean, GlfwContext> Release = new Functions.F0<>("Release") {
+    public static final Functions.F0<Boolean, GlfwContext> Release = new Functions.F0<>("Release") {
 
         @Override
         protected Boolean run(GlfwContext o) {
@@ -107,7 +107,7 @@ public class GlfwContext extends GraphicsContext {
         }
     };
 
-    public static Functions.F0<Boolean, GlfwContext> SwapBuffers = new Functions.F0<>("SwapBuffers") {
+    public static final Functions.F0<Boolean, GlfwContext> SwapBuffers = new Functions.F0<>("SwapBuffers") {
         @Override
         protected Boolean run(GlfwContext o) {
             // long t1=System.nanoTime();

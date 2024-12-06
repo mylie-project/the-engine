@@ -1,7 +1,5 @@
 package mylie.lwjgl3.opengl;
 
-import static org.lwjgl.opengl.GL20.*;
-
 import mylie.engine.core.Engine;
 import mylie.engine.core.FeatureManager;
 import mylie.util.configuration.Configuration;

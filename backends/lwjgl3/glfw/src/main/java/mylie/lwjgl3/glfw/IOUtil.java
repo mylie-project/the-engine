@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -43,14 +42,13 @@ public class IOUtil {
         if (path != null && Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = createByteBuffer((int) fc.size() + 1);
-                while (fc.read(buffer) != -1) {
-
-                }
+                //noinspection StatementWithEmptyBody
+                while (fc.read(buffer) != -1) {}
             }
         } else {
             try (InputStream source = resource.startsWith("http")
-                            ? new URI(resource).toURL().openStream()
-                            : IOUtil.class.getClassLoader().getResourceAsStream(resource)) {
+                    ? new URI(resource).toURL().openStream()
+                    : IOUtil.class.getClassLoader().getResourceAsStream(resource)) {
                 assert source != null;
                 try (ReadableByteChannel rbc = Channels.newChannel(source)) {
                     buffer = createByteBuffer(bufferSize);

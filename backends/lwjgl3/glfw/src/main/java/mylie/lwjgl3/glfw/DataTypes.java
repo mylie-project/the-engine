@@ -223,19 +223,17 @@ public class DataTypes {
     }
 
     public static Input.MouseButton convertMouseButton(int button) {
-        Input.MouseButton engineButton =
-                switch (button) {
-                    case GLFW_MOUSE_BUTTON_LEFT -> Input.MouseButton.LEFT;
-                    case GLFW_MOUSE_BUTTON_RIGHT -> Input.MouseButton.RIGHT;
-                    case GLFW_MOUSE_BUTTON_MIDDLE -> Input.MouseButton.MIDDLE;
-                    case GLFW_MOUSE_BUTTON_4 -> Input.MouseButton.BUTTON_4;
-                    case GLFW_MOUSE_BUTTON_5 -> Input.MouseButton.BUTTON_5;
-                    case GLFW_MOUSE_BUTTON_6 -> Input.MouseButton.BUTTON_6;
-                    case GLFW_MOUSE_BUTTON_7 -> Input.MouseButton.BUTTON_7;
-                    case GLFW_MOUSE_BUTTON_8 -> Input.MouseButton.BUTTON_8;
-                    default -> Input.MouseButton.UNKNOWN;
-                };
-        return engineButton;
+        return switch (button) {
+            case GLFW_MOUSE_BUTTON_LEFT -> Input.MouseButton.LEFT;
+            case GLFW_MOUSE_BUTTON_RIGHT -> Input.MouseButton.RIGHT;
+            case GLFW_MOUSE_BUTTON_MIDDLE -> Input.MouseButton.MIDDLE;
+            case GLFW_MOUSE_BUTTON_4 -> Input.MouseButton.BUTTON_4;
+            case GLFW_MOUSE_BUTTON_5 -> Input.MouseButton.BUTTON_5;
+            case GLFW_MOUSE_BUTTON_6 -> Input.MouseButton.BUTTON_6;
+            case GLFW_MOUSE_BUTTON_7 -> Input.MouseButton.BUTTON_7;
+            case GLFW_MOUSE_BUTTON_8 -> Input.MouseButton.BUTTON_8;
+            default -> Input.MouseButton.UNKNOWN;
+        };
     }
 
     @Getter(AccessLevel.PACKAGE)

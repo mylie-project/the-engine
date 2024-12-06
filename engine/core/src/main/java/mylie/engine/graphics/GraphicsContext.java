@@ -232,7 +232,5 @@ public abstract class GraphicsContext {
         record WindowedFullscreen(Graphics.Display display) implements VideoMode {}
     }
 
-    @Getter
-        public record Icons(String... paths) {
-    }
+    public record Icons(String... paths) {}
 }
