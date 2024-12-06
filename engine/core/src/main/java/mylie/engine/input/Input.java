@@ -1,6 +1,5 @@
 package mylie.engine.input;
 
-
 @SuppressWarnings("unused")
 public interface Input {
     record Key(String name) {

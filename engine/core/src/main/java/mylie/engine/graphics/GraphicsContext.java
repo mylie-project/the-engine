@@ -15,7 +15,7 @@ import org.joml.Vector2ic;
  * types of graphics contexts in a graphical application. It manages the setup
  * and configuration necessary for rendering graphical content, utilizing features
  * such as configuration management, threading, and asynchronous operations.
- *
+ * <p>
  * This class keeps track of a global counter for instances, helps in managing
  * a task queue, and utilizes a feature thread to handle graphical operations.
  * Subclasses must provide concrete implementations for the resource management
@@ -77,11 +77,11 @@ public abstract class GraphicsContext {
      * class, allowing the configuration of different properties like window
      * resizability, vertical synchronization, transparency, window decorations,
      * multisampling, and more.
-     *
+     * <p>
      * These parameters are meant to be used in tandem with a `Configuration` object
      * that manages their values and notifies any associated `GraphicsContext`
      * when a parameter value changes.
-     *
+     * <p>
      * Fields:
      * - `Resizable`: Specifies if the window can be resized by the user.
      * - `VSync`: Enables or disables vertical synchronization.
@@ -93,7 +93,7 @@ public abstract class GraphicsContext {
      * - `Title`: Sets the title of the window.
      * - `VideoMode`: Configures the video mode, such as fullscreen or windowed.
      * - `Icons`: Sets the icons used for the window.
-     *
+     * <p>
      * This abstract class serves as a central place for defining and accessing
      * configuration parameters within the graphics system.
      */
@@ -116,7 +116,7 @@ public abstract class GraphicsContext {
      * allowing for the setting and retrieval of parameter values. It is designed
      * to be used in conjunction with a GraphicsContext, notifying it when
      * configuration settings change.
-     *
+     * <p>
      * This class is useful for managing settings that may affect the behavior
      * of a graphics system, and could be extended for other systems requiring
      * dynamic configuration capabilities.

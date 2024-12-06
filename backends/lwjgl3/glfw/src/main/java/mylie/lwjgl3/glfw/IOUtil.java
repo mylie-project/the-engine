@@ -5,6 +5,8 @@ import static org.lwjgl.system.MemoryUtil.memSlice;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -42,25 +44,29 @@ public class IOUtil {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = createByteBuffer((int) fc.size() + 1);
                 while (fc.read(buffer) != -1) {
-                    ;
+
                 }
             }
         } else {
             try (InputStream source = resource.startsWith("http")
-                            ? new URL(resource).openStream()
-                            : IOUtil.class.getClassLoader().getResourceAsStream(resource);
-                    ReadableByteChannel rbc = Channels.newChannel(source)) {
-                buffer = createByteBuffer(bufferSize);
+                            ? new URI(resource).toURL().openStream()
+                            : IOUtil.class.getClassLoader().getResourceAsStream(resource)) {
+                assert source != null;
+                try (ReadableByteChannel rbc = Channels.newChannel(source)) {
+                    buffer = createByteBuffer(bufferSize);
 
-                while (true) {
-                    int bytes = rbc.read(buffer);
-                    if (bytes == -1) {
-                        break;
-                    }
-                    if (buffer.remaining() == 0) {
-                        buffer = resizeBuffer(buffer, buffer.capacity() * 3 / 2); // 50%
+                    while (true) {
+                        int bytes = rbc.read(buffer);
+                        if (bytes == -1) {
+                            break;
+                        }
+                        if (buffer.remaining() == 0) {
+                            buffer = resizeBuffer(buffer, buffer.capacity() * 3 / 2); // 50%
+                        }
                     }
                 }
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
         }
 

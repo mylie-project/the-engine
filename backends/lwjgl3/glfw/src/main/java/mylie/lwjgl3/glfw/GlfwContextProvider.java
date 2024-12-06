@@ -68,6 +68,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                     log.error(e.getLocalizedMessage());
                 }
                 imageBuffers[i] = STBImage.stbi_load_from_memory(buffers[i], w, h, comp, 4);
+                assert imageBuffers[i] != null;
                 iconsBuffer.position(i).width(w.get(0)).height(h.get(0)).pixels(imageBuffers[i]);
             }
             iconsBuffer.position(0);
@@ -242,7 +243,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             contexts.primaryContext.makeCurrent().get();
         }
         if (videoMode instanceof GraphicsContext.VideoMode.Windowed windowed) {
-            Vector2ic position = new Vector2i();
+            Vector2ic position;
             if (windowed.position() == GraphicsContext.VideoMode.Windowed.Centered || windowed.position() == null) {
                 DataTypes.GlfwDisplay tmpDisplay =
                         (DataTypes.GlfwDisplay) (windowed.display() != null ? windowed.display() : primaryDisplay);
