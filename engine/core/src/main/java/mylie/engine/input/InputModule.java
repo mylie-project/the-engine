@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.*;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
-import mylie.engine.input.events.InputEvent;
 import mylie.engine.input.listeners.InputListener;
 import mylie.util.configuration.Configuration;
 

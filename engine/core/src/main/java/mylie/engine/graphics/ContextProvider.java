@@ -8,4 +8,7 @@ import mylie.util.configuration.Configuration;
 public abstract class ContextProvider {
     public abstract List<Graphics.Display> onInitialize(
             FeatureManager featureManager, Configuration<Engine> engineConfiguration);
+
+    public abstract GraphicsContext createContext(
+            GraphicsContextSettings contextSettings, GraphicsContext primaryContext);
 }

@@ -2,6 +2,7 @@ package mylie.engine.graphics;
 
 import java.util.List;
 import mylie.engine.core.BaseFeature;
+import mylie.engine.core.features.async.Result;
 
 public interface GraphicsManager extends BaseFeature.App {
     List<Graphics.Display> availableDisplays();
@@ -14,4 +15,8 @@ public interface GraphicsManager extends BaseFeature.App {
         }
         throw new RuntimeException("No primary display found");
     }
+
+    GraphicsContext createContext(GraphicsContextSettings contextSettings, boolean synced);
+
+    Result<Boolean> destroyContext(GraphicsContext context);
 }

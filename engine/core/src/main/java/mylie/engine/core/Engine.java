@@ -32,6 +32,7 @@ public class Engine {
 
     public static ShutdownReason start(
             Configuration<Engine> engineConfiguration, boolean handleRestart, boolean storeSettings) {
+        Thread.currentThread().setName("Engine");
         buildInfo.logBuildInfo(log);
         log.info("Starting the engine, handle restarts: {}, store settings: {}", handleRestart, storeSettings);
         Core core;

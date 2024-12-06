@@ -9,7 +9,7 @@
     </appender>
 
     <logger name="mylie.engine.core.features.async" level="info" />
-
+    <logger name="mylie.lwjgl3" level="info" />
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

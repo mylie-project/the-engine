@@ -113,8 +113,8 @@ public final class Async {
         }
     }
 
-    public static void await(Result<?> result) {
-        result.get();
+    public static <T> T await(Result<T> result) {
+        return result.get();
     }
 
     public static <T> void await(Iterable<Result<T>> results) {
