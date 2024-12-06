@@ -24,7 +24,7 @@ public class OpenGlContext extends GlfwContext {
         return Async.async(Async.Mode.Async, Cache.Never, target(), -1, CreateGlCapabilities, this);
     }
 
-    private static Functions.F0<Boolean, OpenGlContext> CreateGlCapabilities =
+    private static final Functions.F0<Boolean, OpenGlContext> CreateGlCapabilities =
             new Functions.F0<>("CreateGlCapabilities") {
                 @Override
                 protected Boolean run(OpenGlContext o) {

@@ -22,7 +22,7 @@ public class OpenglContextProvider extends GlfwContextProvider {
 
     private void setupApi(GlfwContext glfwContext) {}
 
-    private static Functions.F1<Boolean, OpenglContextProvider, GlfwContext> CreateContext =
+    private static final Functions.F1<Boolean, OpenglContextProvider, GlfwContext> CreateContext =
             new Functions.F1<Boolean, OpenglContextProvider, GlfwContext>("CreateContext") {
                 @Override
                 protected Boolean run(OpenglContextProvider o, GlfwContext glfwContext) {

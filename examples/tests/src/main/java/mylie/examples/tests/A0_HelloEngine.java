@@ -47,8 +47,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         graphicsContext = graphicsManager.createContext(contextSettings, true);
     }
 
-    @NotNull
-    private static GlfwContextSettings setupContextSettings(Graphics.Display display) {
+    @NotNull private static GlfwContextSettings setupContextSettings(Graphics.Display display) {
         GlfwContextSettings contextSettings = new GlfwContextSettings();
         contextSettings.resolution(
                 new Resolution.Windowed(display, new Vector2i(800, 600), Resolution.Windowed.Center));
@@ -65,9 +64,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
     }
 
     @Override
-    public void onUpdate(Timer.Time time) {
-
-    }
+    public void onUpdate(Timer.Time time) {}
 
     @Override
     public void onDestroy() {
