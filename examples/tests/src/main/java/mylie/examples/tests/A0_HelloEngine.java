@@ -21,7 +21,6 @@ import org.joml.Vector2i;
 @Slf4j
 public class A0_HelloEngine extends BaseApplication implements RawInputListener {
     GraphicsContext graphicsContext;
-    GraphicsContext graphicsContext2;
 
     public static void main(String[] args) {
         PlatformDesktop platform = new PlatformDesktop();
@@ -30,6 +29,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         engineConfiguration.set(Engine.Settings.Application, new A0_HelloEngine());
         engineConfiguration.set(Engine.Settings.GraphicsApi, new OpenglSettings());
         Engine.ShutdownReason start = Engine.start(engineConfiguration, true, false);
+        log.info(start.toString());
     }
 
     @Override

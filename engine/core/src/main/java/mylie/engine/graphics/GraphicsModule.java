@@ -17,8 +17,8 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
     @Getter(AccessLevel.PUBLIC)
     private List<Graphics.Display> availableDisplays;
 
-    private List<GraphicsContext> activeContexts;
-    private List<GraphicsContext> syncedContexts;
+    private final List<GraphicsContext> activeContexts;
+    private final List<GraphicsContext> syncedContexts;
     private ContextProvider contextProvider;
     private GraphicsApi graphicsApi;
     private GraphicsContext primaryContext;

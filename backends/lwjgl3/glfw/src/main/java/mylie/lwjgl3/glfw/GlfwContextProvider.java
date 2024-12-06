@@ -29,7 +29,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 @Getter(AccessLevel.PROTECTED)
 public abstract class GlfwContextProvider extends ContextProvider implements GLFWErrorCallbackI {
     private Scheduler scheduler;
-    private GlfwInputProvider inputProvider;
+    private final GlfwInputProvider inputProvider;
 
     public GlfwContextProvider() {
         inputProvider = new GlfwInputProvider();
@@ -97,7 +97,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         return glfwVideoMode;
     }
 
-    protected void setupContext(GlfwContext context, boolean newContext) {
+    protected void setupContext(GlfwContext context) {
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GraphicsContext.Configuration configuration = context.configuration();
@@ -163,9 +163,5 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     public void destroyContext(GlfwContext glfwContext) {
         GLFW.glfwHideWindow(glfwContext.handle);
         GLFW.glfwDestroyWindow(glfwContext.handle);
-    }
-
-    public void applySettings(GlfwContext context) {
-        setupContext(context, false);
     }
 }

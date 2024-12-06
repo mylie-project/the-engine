@@ -91,7 +91,7 @@ public final class Async {
             Class<T> targetType,
             Functions.F0<R, T> function) {
         Set<Result<R>> results = new HashSet<>();
-        Mode currentMode = mode;
+        Mode currentMode;
         for (Object object : objects) {
             currentMode = mode == Mode.Direct && canExecuteDirect(target) ? Mode.Direct : Mode.Async;
             if (targetType.isAssignableFrom(object.getClass())) {
@@ -111,8 +111,8 @@ public final class Async {
             Class<T> targetType,
             Functions.F0<R, T> function) {
         Set<Result<R>> results = new HashSet<>();
-        Mode currentMode = mode;
-        Target currentTarget = null;
+        Mode currentMode;
+        Target currentTarget;
         for (Object object : objects) {
             if (targetType.isAssignableFrom(object.getClass())) {
                 T object1 = targetType.cast(object);

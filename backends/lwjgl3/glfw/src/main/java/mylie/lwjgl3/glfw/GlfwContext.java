@@ -29,6 +29,7 @@ public class GlfwContext extends GraphicsContext {
         this.primaryContext = primaryContext;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <T> void onSettingChanged(Configuration.Parameter<T> parameter, T value) {
         DataTypes.GlfwContextParameter<Object> glfwParameter = (DataTypes.GlfwContextParameter<Object>) parameter;
@@ -39,7 +40,7 @@ public class GlfwContext extends GraphicsContext {
         return Async.async(Async.Mode.Async, Cache.Never, Async.ENGINE, -1, ShutdownContext, this);
     }
 
-    private static Functions.F0<Boolean, GlfwContext> ShutdownContext = new Functions.F0<>("ShutdownContext") {
+    private static final Functions.F0<Boolean, GlfwContext> ShutdownContext = new Functions.F0<>("ShutdownContext") {
         @Override
         protected Boolean run(GlfwContext o) {
             o.provider.destroyContext(o);
