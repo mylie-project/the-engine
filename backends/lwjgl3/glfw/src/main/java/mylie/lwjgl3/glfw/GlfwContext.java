@@ -33,7 +33,12 @@ public class GlfwContext extends GraphicsContext {
     @Override
     protected <T> void onSettingChanged(Configuration.Parameter<T> parameter, T value) {
         DataTypes.GlfwContextParameter<Object> glfwParameter = (DataTypes.GlfwContextParameter<Object>) parameter;
-        Async.async(Async.Mode.Async, Cache.Never, target(), -1, ApplySettings, handle, glfwParameter, value);
+        Async.Target tmpTarget = Async.ENGINE;
+        // glfw.setSwapInterval has to be called on the thread holding the context
+        if (parameter == Parameters.VSync) {
+            tmpTarget = target();
+        }
+        Async.async(Async.Mode.Async, Cache.Never, tmpTarget, -1, ApplySettings, handle, glfwParameter, value);
     }
 
     protected Result<Boolean> destroy() {

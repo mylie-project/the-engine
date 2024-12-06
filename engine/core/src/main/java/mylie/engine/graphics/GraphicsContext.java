@@ -45,6 +45,7 @@ public abstract class GraphicsContext {
         public static Configuration.Parameter<Integer> Multisampling;
         public static Configuration.Parameter<String> Title;
         public static Configuration.Parameter<VideoMode> VideoMode;
+        public static Configuration.Parameter<Icons> Icons;
     }
 
     public static class Configuration {
@@ -79,6 +80,15 @@ public abstract class GraphicsContext {
         @Getter(AccessLevel.PACKAGE)
         public static class Parameter<T> {
             protected T defaultValue;
+        }
+    }
+
+    @Getter
+    public static class Icons {
+        String[] paths;
+
+        public Icons(String... paths) {
+            this.paths = paths;
         }
     }
 

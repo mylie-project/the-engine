@@ -37,9 +37,11 @@ dependencyResolutionManagement{
             library("lwjgl3.core","org.lwjgl","lwjgl").versionRef("lwjgl3")
             library("lwjgl3.glfw","org.lwjgl","lwjgl-glfw").versionRef("lwjgl3")
             library("lwjgl3.opengl","org.lwjgl","lwjgl-opengl").versionRef("lwjgl3")
+            library("lwjgl3.stb","org.lwjgl","lwjgl-stb").versionRef("lwjgl3")
             library("lwjgl3.core.natives","org.lwjgl","lwjgl").versionRef("lwjgl3")
             library("lwjgl3.glfw.natives","org.lwjgl","lwjgl-glfw").versionRef("lwjgl3")
             library("lwjgl3.opengl.natives","org.lwjgl","lwjgl-opengl").versionRef("lwjgl3")
+            library("lwjgl3.stb.natives","org.lwjgl","lwjgl-stb").versionRef("lwjgl3")
 
         }
     }

@@ -28,6 +28,7 @@ public class OpenGlContext extends GlfwContext {
                 @Override
                 protected Boolean run(OpenGlContext o) {
                     o.capabilities = GL.createCapabilities();
+
                     return true;
                 }
             };
