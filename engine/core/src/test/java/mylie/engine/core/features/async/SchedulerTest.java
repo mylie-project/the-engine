@@ -12,6 +12,7 @@ import mylie.engine.core.features.async.schedulers.VirtualThreadScheduler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class SchedulerTest {
 
     static Stream<Scheduler> schedulerProvider() {
@@ -112,8 +113,8 @@ public class SchedulerTest {
         queue2.clear();
     }
 
-    private static Functions.F0<Boolean, AtomicInteger> atomicIntegerIncrease =
-            new Functions.F0<Boolean, AtomicInteger>("AtomicIntegerIncrease") {
+    private static final Functions.F0<Boolean, AtomicInteger> atomicIntegerIncrease =
+            new Functions.F0<>("AtomicIntegerIncrease") {
                 @Override
                 public Boolean run(AtomicInteger o) {
                     o.incrementAndGet();
@@ -121,8 +122,8 @@ public class SchedulerTest {
                 }
             };
 
-    private static Functions.F0<Boolean, AtomicInteger> atomicIntegerDecrease =
-            new Functions.F0<Boolean, AtomicInteger>("AtomicIntegerDecrease") {
+    private static final Functions.F0<Boolean, AtomicInteger> atomicIntegerDecrease =
+            new Functions.F0<>("AtomicIntegerDecrease") {
                 @Override
                 public Boolean run(AtomicInteger o) {
                     o.decrementAndGet();

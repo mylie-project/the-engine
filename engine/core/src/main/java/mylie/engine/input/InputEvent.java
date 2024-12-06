@@ -20,6 +20,7 @@ public abstract class InputEvent {
             this.keyboard = keyboard;
         }
 
+        @SuppressWarnings("CanBeFinal")
         @Getter
         public static class Key extends Keyboard {
             public Key(
@@ -65,6 +66,7 @@ public abstract class InputEvent {
             this.mouse = mouse;
         }
 
+        @SuppressWarnings("CanBeFinal")
         @Getter
         public static class Button extends Mouse {
             public enum Type {
@@ -91,6 +93,7 @@ public abstract class InputEvent {
             private int mods;
         }
 
+        @SuppressWarnings("CanBeFinal")
         @Getter
         public static class Cursor extends Mouse {
             private Vector2ic position;
@@ -101,6 +104,7 @@ public abstract class InputEvent {
             }
         }
 
+        @SuppressWarnings("CanBeFinal")
         @Getter
         public static class Wheel extends Mouse {
             public enum WheelAxis {

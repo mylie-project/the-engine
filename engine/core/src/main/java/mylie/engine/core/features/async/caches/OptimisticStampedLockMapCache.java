@@ -19,7 +19,6 @@ public class OptimisticStampedLockMapCache extends MapCache {
         if (!lock.validate(stamp)) {
             stamp = lock.readLock();
             try {
-                // noinspection ReassignedVariable
                 objectResult = super.get(hash);
             } finally {
                 lock.unlockRead(stamp);

@@ -55,5 +55,6 @@ public class FeatureManager {
                 results.add(baseFeature.destroy());
             }
         }
+        Async.await(results);
     }
 }

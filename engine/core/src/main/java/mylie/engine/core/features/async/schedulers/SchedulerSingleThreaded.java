@@ -43,7 +43,7 @@ public class SchedulerSingleThreaded extends Scheduler implements Scheduler.Task
             this.result = result;
         }
 
-        R result;
+        final R result;
 
         @Override
         public R get() {

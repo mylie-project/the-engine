@@ -89,7 +89,7 @@ public abstract class GraphicsContext {
      * - `AlwaysOnTop`: Indicates if the window should always be displayed on top of other windows.
      * - `Srgb`: Determines if the SRGB color space is used.
      * - `Decorated`: Controls whether the window has decorations (title bar, borders).
-     * - `Multisampling`: Configures the level of multisampling for anti-aliasing purposes.
+     * - `Multisampling`: Configures the level of multisampling for antialiasing purposes.
      * - `Title`: Sets the title of the window.
      * - `VideoMode`: Configures the video mode, such as fullscreen or windowed.
      * - `Icons`: Sets the icons used for the window.
@@ -233,11 +233,6 @@ public abstract class GraphicsContext {
     }
 
     @Getter
-    public static class Icons {
-        String[] paths;
-
-        public Icons(String... paths) {
-            this.paths = paths;
-        }
+        public record Icons(String... paths) {
     }
 }
