@@ -20,7 +20,9 @@ public class OpenglContextProvider extends GlfwContextProvider {
         return glfwContext;
     }
 
-    private void setupApi(GlfwContext glfwContext) {}
+    private void setupApi(GlfwContext glfwContext) {
+        // todo: opengl profile selection.
+    }
 
     private static final Functions.F1<Boolean, OpenglContextProvider, GlfwContext> CreateContext =
             new Functions.F1<>("CreateContext") {
