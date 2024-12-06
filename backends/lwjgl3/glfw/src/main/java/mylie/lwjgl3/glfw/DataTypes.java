@@ -3,10 +3,12 @@ package mylie.lwjgl3.glfw;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import mylie.engine.graphics.Graphics;
+import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.input.Input;
 import org.joml.Vector2ic;
 import org.joml.Vector4ic;
@@ -234,5 +236,17 @@ public class DataTypes {
                     default -> Input.MouseButton.UNKNOWN;
                 };
         return engineButton;
+    }
+
+    @Getter(AccessLevel.PACKAGE)
+    public static class GlfwContextParameter<T> extends GraphicsContext.Configuration.Parameter<T> {
+        final int windowHint;
+        final BiConsumer<Long, T> consumer;
+
+        public GlfwContextParameter(int windowHint, BiConsumer<Long, T> consumer, T defaultValue) {
+            this.windowHint = windowHint;
+            this.consumer = consumer;
+            this.defaultValue = defaultValue;
+        }
     }
 }

@@ -10,5 +10,5 @@ public abstract class ContextProvider {
             FeatureManager featureManager, Configuration<Engine> engineConfiguration);
 
     public abstract GraphicsContext createContext(
-            GraphicsContextSettings contextSettings, GraphicsContext primaryContext);
+            GraphicsContext.Configuration contextSettings, GraphicsContext primaryContext);
 }

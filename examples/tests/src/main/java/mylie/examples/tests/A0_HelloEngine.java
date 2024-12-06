@@ -8,17 +8,14 @@ import mylie.engine.core.features.async.schedulers.SingleThreadSchedulerSettings
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.graphics.Graphics;
 import mylie.engine.graphics.GraphicsContext;
-import mylie.engine.graphics.GraphicsContextSettings.Resolution;
 import mylie.engine.graphics.GraphicsManager;
 import mylie.engine.input.Input;
 import mylie.engine.input.InputEvent;
 import mylie.engine.input.InputManager;
 import mylie.engine.input.listeners.RawInputListener;
 import mylie.engine.platform.PlatformDesktop;
-import mylie.lwjgl3.glfw.GlfwContextSettings;
 import mylie.lwjgl3.opengl.OpenglSettings;
 import mylie.util.configuration.Configuration;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
 
 @Slf4j
@@ -42,25 +39,13 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         inputManager.addInputListener(this);
         GraphicsManager graphicsManager = getFeature(GraphicsManager.class);
         Graphics.Display display = graphicsManager.primaryDisplay();
-        GlfwContextSettings contextSettings = setupContextSettings(display);
-
-        graphicsContext = graphicsManager.createContext(contextSettings, true);
-    }
-
-    @NotNull private static GlfwContextSettings setupContextSettings(Graphics.Display display) {
-        GlfwContextSettings contextSettings = new GlfwContextSettings();
-        contextSettings.resolution(
-                new Resolution.Windowed(display, new Vector2i(800, 600), Resolution.Windowed.Center));
-        // new Resolution.Fullscreen(display,display.defaultVideoMode()));
-        // new Resolution.FullScreenWindowed(display));
-        contextSettings.id("1");
-        contextSettings.transparent(false);
-        contextSettings.srgb(true);
-        contextSettings.samples(16);
-        contextSettings.alwaysOnTop(true);
-        contextSettings.transparent(false);
-        contextSettings.decorated(true);
-        return contextSettings;
+        GraphicsContext.Configuration configuration = new GraphicsContext.Configuration();
+        GraphicsContext.VideoMode videoMode = new GraphicsContext.VideoMode.Windowed(
+                display, new Vector2i(800, 600), GraphicsContext.VideoMode.Windowed.Centered);
+        configuration.set(GraphicsContext.Parameters.AlwaysOnTop, true);
+        configuration.set(GraphicsContext.Parameters.Title, "Hello Engine");
+        configuration.set(GraphicsContext.Parameters.VideoMode, videoMode);
+        graphicsContext = graphicsManager.createContext(configuration, true);
     }
 
     @Override

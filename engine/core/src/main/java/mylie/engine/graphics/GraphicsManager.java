@@ -16,7 +16,7 @@ public interface GraphicsManager extends BaseFeature.App {
         throw new RuntimeException("No primary display found");
     }
 
-    GraphicsContext createContext(GraphicsContextSettings contextSettings, boolean synced);
+    GraphicsContext createContext(GraphicsContext.Configuration contextSettings, boolean synced);
 
     Result<Boolean> destroyContext(GraphicsContext context);
 }

@@ -9,7 +9,6 @@ import mylie.engine.core.features.async.Cache;
 import mylie.engine.core.features.async.Functions;
 import mylie.engine.core.features.async.Result;
 import mylie.engine.graphics.GraphicsContext;
-import mylie.engine.graphics.GraphicsContextSettings;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
@@ -24,18 +23,14 @@ public class GlfwContext extends GraphicsContext {
 
     long handle;
 
-    public GlfwContext(GraphicsContextSettings settings, GlfwContextProvider provider, GlfwContext primaryContext) {
-        super(settings, provider.scheduler());
+    public GlfwContext(Configuration configuration, GlfwContextProvider provider, GlfwContext primaryContext) {
+        super(configuration, provider.scheduler());
         this.provider = provider;
         this.primaryContext = primaryContext;
     }
 
     @Override
-    protected void applySettings(GraphicsContextSettings graphicsContextSettings) {}
-
-    protected void destroyContext(GraphicsContext graphicsContext) {
-        provider.destroyContext(this);
-    }
+    protected void applySettings() {}
 
     protected Result<Boolean> destroy() {
         return Async.async(Async.Mode.Async, Cache.Never, Async.ENGINE, -1, ShutdownContext, this);
@@ -44,7 +39,7 @@ public class GlfwContext extends GraphicsContext {
     private static Functions.F0<Boolean, GlfwContext> ShutdownContext = new Functions.F0<>("ShutdownContext") {
         @Override
         protected Boolean run(GlfwContext o) {
-            o.destroyContext(o);
+            o.provider.destroyContext(o);
             o.featureThread().stop();
             return true;
         }
@@ -62,6 +57,15 @@ public class GlfwContext extends GraphicsContext {
     public Result<Boolean> release() {
         return Async.async(Async.Mode.Async, Cache.Never, target(), -1, Release, this);
     }
+
+    public static Functions.F0<Boolean, GlfwContext> ApplySettings = new Functions.F0<>("ApplySettings") {
+
+        @Override
+        protected Boolean run(GlfwContext o) {
+            o.provider.applySettings(o);
+            return true;
+        }
+    };
 
     public static Functions.F0<Boolean, GlfwContext> MakeCurrent = new Functions.F0<>("MakeCurrent") {
 

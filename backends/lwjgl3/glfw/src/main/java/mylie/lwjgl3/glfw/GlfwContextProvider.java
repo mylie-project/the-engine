@@ -1,6 +1,5 @@
 package mylie.lwjgl3.glfw;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
@@ -15,13 +14,14 @@ import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.graphics.ContextProvider;
 import mylie.engine.graphics.Graphics;
-import mylie.engine.graphics.GraphicsContextSettings;
+import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.input.InputManager;
 import mylie.util.configuration.Configuration;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.joml.Vector4i;
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 
@@ -33,14 +33,28 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
 
     public GlfwContextProvider() {
         inputProvider = new GlfwInputProvider();
+        GraphicsContext.Parameters.Resizable = new DataTypes.GlfwContextParameter<>(GLFW.GLFW_RESIZABLE, null, false);
+        GraphicsContext.Parameters.Transparent =
+                new DataTypes.GlfwContextParameter<>(GLFW.GLFW_TRANSPARENT_FRAMEBUFFER, null, false);
+        GraphicsContext.Parameters.AlwaysOnTop = new DataTypes.GlfwContextParameter<>(GLFW.GLFW_FLOATING, null, false);
+        GraphicsContext.Parameters.Title = new DataTypes.GlfwContextParameter<>(-1, GLFW::glfwSetWindowTitle, "Mylie");
+
+        GraphicsContext.Parameters.VSync = new DataTypes.GlfwContextParameter<>(-1, this::swapIntervalWrapper, true);
+        GraphicsContext.Parameters.Decorated = new DataTypes.GlfwContextParameter<>(GLFW.GLFW_DECORATED, null, true);
+        GraphicsContext.Parameters.Multisampling = new DataTypes.GlfwContextParameter<>(GLFW.GLFW_SAMPLES, null, 0);
+        GraphicsContext.Parameters.Srgb = new DataTypes.GlfwContextParameter<>(GLFW.GLFW_SRGB_CAPABLE, null, false);
+    }
+
+    private void swapIntervalWrapper(long window, boolean vsync) {
+        GLFW.glfwSwapInterval(vsync ? 1 : 0);
     }
 
     @Override
     public List<Graphics.Display> onInitialize(
             FeatureManager featureManager, Configuration<Engine> engineConfiguration) {
         scheduler = featureManager.get(Scheduler.class);
-        glfwSetErrorCallback(this);
-        if (!glfwInit()) {
+        GLFW.glfwSetErrorCallback(this);
+        if (!GLFW.glfwInit()) {
             throw new RuntimeException("Unable to initialize GLFW");
         }
         featureManager.get(InputManager.class).addInputProvider(inputProvider);
@@ -49,7 +63,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
 
     private List<Graphics.Display> getDisplays() {
         List<Graphics.Display> displays = new ArrayList<>();
-        PointerBuffer pointerBuffer = glfwGetMonitors();
+        PointerBuffer pointerBuffer = GLFW.glfwGetMonitors();
         for (int i = 0; i < Objects.requireNonNull(pointerBuffer).capacity(); i++) {
             long handle = pointerBuffer.get(i);
             displays.add(getDisplay(handle));
@@ -60,13 +74,13 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     private Graphics.Display getDisplay(long handle) {
         List<DataTypes.GlfwVideoMode> videoModes = getVideoModes(handle);
         DataTypes.GlfwVideoMode defaultVideoMode =
-                getVideoMode(handle, Objects.requireNonNull(glfwGetVideoMode(handle)));
-        return new DataTypes.GlfwDisplay(handle, glfwGetPrimaryMonitor() == handle, defaultVideoMode, videoModes);
+                getVideoMode(handle, Objects.requireNonNull(GLFW.glfwGetVideoMode(handle)));
+        return new DataTypes.GlfwDisplay(handle, GLFW.glfwGetPrimaryMonitor() == handle, defaultVideoMode, videoModes);
     }
 
     private List<DataTypes.GlfwVideoMode> getVideoModes(long handle) {
         List<DataTypes.GlfwVideoMode> videoModes = new ArrayList<>();
-        GLFWVidMode.Buffer glfwVidModes = glfwGetVideoModes(handle);
+        GLFWVidMode.Buffer glfwVidModes = GLFW.glfwGetVideoModes(handle);
         assert glfwVidModes != null;
         for (GLFWVidMode glfwVidMode : glfwVidModes) {
             videoModes.add(getVideoMode(handle, glfwVidMode));
@@ -83,65 +97,60 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         return glfwVideoMode;
     }
 
-    protected void setupContext(GlfwContext context) {
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        if (context.settings() instanceof GlfwContextSettings settings) {
-            glfwWindowHint(GLFW_RESIZABLE, settings.resizable() ? GLFW_TRUE : GLFW_FALSE);
-            glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, settings.transparent() ? GLFW_TRUE : GLFW_FALSE);
-            glfwWindowHint(GLFW_FLOATING, settings.alwaysOnTop() ? GLFW_TRUE : GLFW_FALSE);
-            glfwWindowHint(GLFW_SRGB_CAPABLE, settings.srgb() ? GLFW_TRUE : GLFW_FALSE);
-            glfwWindowHint(GLFW_SAMPLES, settings.samples());
-            glfwWindowHint(GLFW_DECORATED, settings.decorated() ? GLFW_TRUE : GLFW_FALSE);
+    protected void setupContext(GlfwContext context, boolean newContext) {
+        GLFW.glfwDefaultWindowHints();
+        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+        GraphicsContext.Configuration configuration = context.configuration();
+        for (GraphicsContext.Configuration.Parameter<?> parameter : configuration.getParameters()) {
+            if (parameter instanceof DataTypes.GlfwContextParameter<?> glfwParameter) {
+                if (glfwParameter.windowHint() != -1) {
+                    Object o = configuration.get(parameter);
+                    int value=0;
+                    if(o instanceof Boolean){
+                        value=((Boolean)o)?1:0;
+                    }else if(o instanceof Integer){
+                        value=(Integer)o;
+                    }
+                    GLFW.glfwWindowHint(glfwParameter.windowHint(), value);
+                }
+            }
         }
-        if (context.settings().resolution()
-                instanceof GraphicsContextSettings.Resolution.FullScreenWindowed fullScreenWindowed) {
-            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        GraphicsContext.VideoMode videoMode = configuration.get(GraphicsContext.Parameters.VideoMode);
+        if (videoMode instanceof GraphicsContext.VideoMode.WindowedFullscreen) {
+            GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+            GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         }
     }
 
     protected boolean createWindow(GlfwContext contexts) {
         log.trace("Creating window");
-        GraphicsContextSettings settings = contexts.settings();
-        GraphicsContextSettings.Resolution resolution = settings.resolution();
+        GraphicsContext.Configuration configuration = contexts.configuration();
+        GraphicsContext.VideoMode videoMode = configuration.get(GraphicsContext.Parameters.VideoMode);
         Vector2ic size = new Vector2i(16, 16);
         long display = NULL;
         long parent = contexts.primaryContext == null ? NULL : contexts.primaryContext.handle;
-        String title = settings.title() == null ? settings.id() : settings.title();
+        String title = configuration.get(GraphicsContext.Parameters.Title);
         boolean fullscreen = false;
-        if (resolution instanceof GraphicsContextSettings.Resolution.Windowed windowed) {
+        if (videoMode instanceof GraphicsContext.VideoMode.Windowed windowed) {
             size = windowed.size();
-            display = ((DataTypes.GlfwDisplay) windowed.display()).handle();
-            fullscreen = false;
-        } else if (resolution instanceof GraphicsContextSettings.Resolution.Fullscreen fullscreenResolution) {
-            size = fullscreenResolution.videoMode().resolution();
-            display = ((DataTypes.GlfwDisplay) fullscreenResolution.display()).handle();
+        } else if (videoMode instanceof GraphicsContext.VideoMode.WindowedFullscreen windowedFullscreen) {
+            size = windowedFullscreen.display().defaultVideoMode().resolution();
+        } else if (videoMode instanceof GraphicsContext.VideoMode.Fullscreen fullscreenMode) {
             fullscreen = true;
-        } else if (resolution
-                instanceof GraphicsContextSettings.Resolution.FullScreenWindowed windowedFullscreenResolution) {
-            size = windowedFullscreenResolution.display().defaultVideoMode().resolution();
-            display = ((DataTypes.GlfwDisplay) windowedFullscreenResolution.display()).handle();
-            fullscreen = false;
+            size = fullscreenMode.videoMode().resolution();
+            display=((DataTypes.GlfwDisplay)fullscreenMode.display()).handle();
         }
+
         if (parent != NULL) {
             contexts.primaryContext.release().get();
-            // glfwMakeContextCurrent(parent);
         }
-        long window = glfwCreateWindow(size.x(), size.y(), title, fullscreen ? display : NULL, parent);
+        long window = GLFW.glfwCreateWindow(size.x(), size.y(), title, fullscreen ? display : NULL, parent);
         if (parent != NULL) {
-            // glfwMakeContextCurrent(NULL);
             contexts.primaryContext.makeCurrent().get();
-        }
-        if (resolution instanceof GraphicsContextSettings.Resolution.Windowed windowed) {
-            if (windowed.position() == GraphicsContextSettings.Resolution.Windowed.Center) {
-                GLFWVidMode vidmode = Objects.requireNonNull(glfwGetVideoMode(display));
-                glfwSetWindowPos(window, (vidmode.width() - size.x()) / 2, (vidmode.height() - size.y()) / 2);
-            }
         }
         contexts.handle = window;
         inputProvider.addContext(contexts);
-        glfwShowWindow(window);
+        GLFW.glfwShowWindow(window);
         return true;
     }
 
@@ -152,7 +161,11 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     }
 
     public void destroyContext(GlfwContext glfwContext) {
-        glfwHideWindow(glfwContext.handle);
-        glfwDestroyWindow(glfwContext.handle);
+        GLFW.glfwHideWindow(glfwContext.handle);
+        GLFW.glfwDestroyWindow(glfwContext.handle);
+    }
+
+    public void applySettings(GlfwContext context) {
+        setupContext(context, false);
     }
 }

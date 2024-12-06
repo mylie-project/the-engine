@@ -77,9 +77,8 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
         }
 
         @Override
-        public GraphicsContext createContext(GraphicsContextSettings contextSettings, boolean synced) {
+        public GraphicsContext createContext(GraphicsContext.Configuration contextSettings, boolean synced) {
             GraphicsContext context = contextProvider.createContext(contextSettings, primaryContext);
-
             context.featureThread().start();
             if (synced) {
                 syncedContexts.add(context);
