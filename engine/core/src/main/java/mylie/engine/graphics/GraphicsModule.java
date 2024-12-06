@@ -93,7 +93,6 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
 
         @Override
         public Result<Boolean> destroyContext(GraphicsContext context) {
-            log.info("shut down contexts {}", activeContexts.size());
             activeContexts.remove(context);
             syncedContexts.remove(context);
             return context.destroy();

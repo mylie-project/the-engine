@@ -11,11 +11,12 @@ import mylie.lwjgl3.glfw.GlfwContextProvider;
 public class OpenglContextProvider extends GlfwContextProvider {
     @Override
     public GraphicsContext createContext(GraphicsContextSettings contextSettings, GraphicsContext primaryContext) {
-        GlfwContext glfwContext = new GlfwContext(contextSettings, this, (GlfwContext) primaryContext);
+        OpenGlContext glfwContext = new OpenGlContext(contextSettings, this, (GlfwContext) primaryContext);
 
         boolean success = Async.await(
                 Async.async(Async.Mode.Async, Cache.Never, Async.ENGINE, -1, CreateContext, this, glfwContext));
         glfwContext.makeCurrent();
+        glfwContext.createGlCapabilities();
         return glfwContext;
     }
 
@@ -27,8 +28,8 @@ public class OpenglContextProvider extends GlfwContextProvider {
                 protected Boolean run(OpenglContextProvider o, GlfwContext glfwContext) {
                     o.setupContext(glfwContext);
                     o.setupApi(glfwContext);
-                    return o.createWindow(glfwContext);
+                    boolean result = o.createWindow(glfwContext);
+                    return result;
                 }
-                ;
             };
 }

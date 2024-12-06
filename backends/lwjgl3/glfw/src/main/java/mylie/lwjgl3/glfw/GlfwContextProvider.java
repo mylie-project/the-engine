@@ -86,6 +86,19 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     protected void setupContext(GlfwContext context) {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        if (context.settings() instanceof GlfwContextSettings settings) {
+            glfwWindowHint(GLFW_RESIZABLE, settings.resizable() ? GLFW_TRUE : GLFW_FALSE);
+            glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, settings.transparent() ? GLFW_TRUE : GLFW_FALSE);
+            glfwWindowHint(GLFW_FLOATING, settings.alwaysOnTop() ? GLFW_TRUE : GLFW_FALSE);
+            glfwWindowHint(GLFW_SRGB_CAPABLE, settings.srgb() ? GLFW_TRUE : GLFW_FALSE);
+            glfwWindowHint(GLFW_SAMPLES, settings.samples());
+            glfwWindowHint(GLFW_DECORATED, settings.decorated() ? GLFW_TRUE : GLFW_FALSE);
+        }
+        if (context.settings().resolution()
+                instanceof GraphicsContextSettings.Resolution.FullScreenWindowed fullScreenWindowed) {
+            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        }
     }
 
     protected boolean createWindow(GlfwContext contexts) {
@@ -100,6 +113,15 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         if (resolution instanceof GraphicsContextSettings.Resolution.Windowed windowed) {
             size = windowed.size();
             display = ((DataTypes.GlfwDisplay) windowed.display()).handle();
+            fullscreen = false;
+        } else if (resolution instanceof GraphicsContextSettings.Resolution.Fullscreen fullscreenResolution) {
+            size = fullscreenResolution.videoMode().resolution();
+            display = ((DataTypes.GlfwDisplay) fullscreenResolution.display()).handle();
+            fullscreen = true;
+        } else if (resolution
+                instanceof GraphicsContextSettings.Resolution.FullScreenWindowed windowedFullscreenResolution) {
+            size = windowedFullscreenResolution.display().defaultVideoMode().resolution();
+            display = ((DataTypes.GlfwDisplay) windowedFullscreenResolution.display()).handle();
             fullscreen = false;
         }
         if (parent != NULL) {
