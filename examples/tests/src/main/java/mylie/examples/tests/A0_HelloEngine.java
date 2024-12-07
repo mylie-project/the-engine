@@ -49,6 +49,22 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         configuration.set(GraphicsContext.Parameters.VSync, true);
         configuration.set(GraphicsContext.Parameters.Icons, IconFactory.getDefaultIcons());
         graphicsContext = graphicsManager.createContext(configuration, true);
+
+        configuration = new GraphicsContext.Configuration();
+        configuration.set(GraphicsContext.Parameters.AlwaysOnTop, true);
+        configuration.set(GraphicsContext.Parameters.Title, "Hello Engine");
+        configuration.set(GraphicsContext.Parameters.VideoMode, videoMode);
+        configuration.set(GraphicsContext.Parameters.VSync, true);
+        configuration.set(GraphicsContext.Parameters.Icons, IconFactory.getDefaultIcons());
+        graphicsContext = graphicsManager.createContext(configuration, true);
+
+        configuration = new GraphicsContext.Configuration();
+        configuration.set(GraphicsContext.Parameters.AlwaysOnTop, true);
+        configuration.set(GraphicsContext.Parameters.Title, "Hello Engine");
+        configuration.set(GraphicsContext.Parameters.VideoMode, videoMode);
+        configuration.set(GraphicsContext.Parameters.VSync, true);
+        configuration.set(GraphicsContext.Parameters.Icons, IconFactory.getDefaultIcons());
+        graphicsContext = graphicsManager.createContext(configuration, true);
     }
 
     @Override

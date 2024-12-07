@@ -20,6 +20,7 @@ public class Core {
     private final TransferQueue<Runnable> engineTaskQueue;
     private Engine.ShutdownReason shutdownReason;
     private Scheduler scheduler;
+    private boolean shutdownComplete = false;
 
     public Core(Configuration<Engine> engineConfiguration) {
         this.engineConfiguration = engineConfiguration;
@@ -38,7 +39,7 @@ public class Core {
             Thread updateLoopThread = new Thread(this::updateLoop, "UpdateLoop");
             updateLoopThread.setPriority(Thread.MAX_PRIORITY);
             updateLoopThread.start();
-            while (shutdownReason == null) {
+            while (!shutdownComplete) {
                 try {
                     Runnable poll = engineTaskQueue.poll(10, TimeUnit.MILLISECONDS);
                     if (poll != null) {
@@ -61,6 +62,7 @@ public class Core {
             featureManager.onUpdate();
         }
         featureManager.onShutdown();
+        shutdownComplete = true;
     }
 
     private void initModules() {

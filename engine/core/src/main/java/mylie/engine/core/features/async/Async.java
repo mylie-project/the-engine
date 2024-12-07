@@ -126,7 +126,7 @@ public final class Async {
 
     private static <R> Result<R> executeTask(
             Tasks<R> tasks, Mode mode, int hashCode, long frameId, Cache cache, Target target) {
-        if (mode == Mode.Direct) {
+        if (mode == Mode.Direct || canExecuteDirect(target)) {
             // To avoid a dependency loop we have to set the cache result before executing the task.
             // Not sure yet if this leads to possible null results.
             Result.FixedResult<R> result = new Result.FixedResult<>(hashCode, frameId, tasks.execute());
