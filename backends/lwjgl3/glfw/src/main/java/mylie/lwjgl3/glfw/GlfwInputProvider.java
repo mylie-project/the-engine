@@ -1,11 +1,15 @@
 package mylie.lwjgl3.glfw;
 
-import java.util.*;
+
+import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Cache;
 import mylie.engine.core.features.async.Functions;
 import mylie.engine.core.features.async.Result;
+import mylie.engine.core.features.timer.Timer;
+import mylie.engine.graphics.Graphics;
 import mylie.engine.input.Input;
 import mylie.engine.input.InputDevice;
 import mylie.engine.input.InputEvent;
@@ -13,8 +17,12 @@ import mylie.engine.input.InputModule;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.*;
+
 @Slf4j
 public class GlfwInputProvider implements InputModule.Provider {
+    @Setter(AccessLevel.PACKAGE)
+    private Timer timer;
     private List<InputEvent> eventList;
     private final Map<Long, GlfwContext> contextMap;
     private int mods;
@@ -98,6 +106,7 @@ public class GlfwInputProvider implements InputModule.Provider {
 
     public void charCallback(long window, int codepoint) {
         log.trace("Char Callback: window={}, codepoint={}", window, codepoint);
+        eventList.add(new InputEvent.Keyboard.Text(getContext(window),(char)codepoint));
     }
 
     public void cursorPosCallback(long window, double xpos, double ypos) {
@@ -117,6 +126,50 @@ public class GlfwInputProvider implements InputModule.Provider {
         eventList.add(new InputEvent.Mouse.Wheel(getContext(window), defaultMouse, axis, (int) yoffset));
     }
 
+    public void frameBufferSizeCallback(long window, int width, int height) {
+        log.trace("Frame Buffer Size Callback: window={}, width={}, height={}", window, width, height);
+        GlfwContext context = getContext(window);
+        Vector2i frameBufferSize = new Vector2i(width, height);
+        Graphics.ContextProperties.FrameBufferSize.set(context, frameBufferSize,timer.time().frameId());
+        eventList.add(new InputEvent.Window.FramebufferSize(context, frameBufferSize));
+    }
+
+    public void windowSizeCallback(long window, int width, int height) {
+        log.trace("Size Callback: window={}, width={}, height={}", window, width, height);
+        GlfwContext context = getContext(window);
+        Vector2i size = new Vector2i(width, height);
+        Graphics.ContextProperties.Size.set(context, size,timer.time().frameId());
+        eventList.add(new InputEvent.Window.Size(context, size));
+    }
+
+    public void windowCloseCallback(long l) {
+        log.trace("Window Close Callback: window={}", l);
+        GlfwContext context = getContext(l);
+        eventList.add(new InputEvent.Window.Close(context));
+    }
+
+    public void windowFocusCallback(long l, boolean b) {
+        log.trace("Window Focus Callback: window={}, focused={}", l, b);
+        GlfwContext context = getContext(l);
+        Graphics.ContextProperties.Focus.set(context, b,timer.time().frameId());
+        eventList.add(new InputEvent.Window.Focus(context, b));
+    }
+
+    public void windowMaximizeCallback(long l, boolean b) {
+        log.trace("Window Maximize Callback: window={}, maximized={}", l, b);
+        GlfwContext context = getContext(l);
+        Graphics.ContextProperties.Maximized.set(context, b,timer.time().frameId());
+        eventList.add(new InputEvent.Window.Maximized(context, b));
+    }
+
+    public void windowPosCallback(long l, int i, int i1) {
+        log.trace("Window Pos Callback: window={}, x={}, y={}", l, i, i1);
+        GlfwContext context = getContext(l);
+        Vector2i position = new Vector2i(i, i1);
+        Graphics.ContextProperties.Position.set(context, position,timer.time().frameId());
+        eventList.add(new InputEvent.Window.Position(context, position));
+    }
+
     private GlfwContext getContext(long window) {
         return contextMap.get(window);
     }
@@ -130,4 +183,7 @@ public class GlfwInputProvider implements InputModule.Provider {
                     return inputProvider.eventList;
                 }
             };
+
+
+
 }

@@ -41,12 +41,20 @@ public class DataTypes {
     @Getter
     @Setter
     public static class GlfwCallbacks {
-        GLFWKeyCallback keyCallback;
-        GLFWMouseButtonCallback mouseButtonCallback;
-        GLFWCharCallback charCallback;
-        GLFWCursorPosCallback cursorPosCallback;
-        GLFWCursorEnterCallback cursorEnterCallback;
-        GLFWScrollCallback scrollCallback;
+        final GLFWKeyCallback keyCallback;
+        final GLFWCharCallback charCallback;
+
+        final GLFWMouseButtonCallback mouseButtonCallback;
+        final GLFWCursorEnterCallback cursorEnterCallback;
+        final GLFWCursorPosCallback cursorPosCallback;
+        final GLFWScrollCallback scrollCallback;
+
+        final GLFWFramebufferSizeCallback framebufferSizeCallback;
+        final GLFWWindowSizeCallback windowSizeCallback;
+        final GLFWWindowCloseCallback windowCloseCallback;
+        final GLFWWindowFocusCallback windowFocusCallback;
+        final GLFWWindowMaximizeCallback windowMaximizeCallback;
+        final GLFWWindowPosCallback windowPosCallback;
 
         public GlfwCallbacks(GlfwInputProvider glfwInputProvider, GlfwContext context) {
             keyCallback = new GLFWKeyCallback() {
@@ -85,12 +93,60 @@ public class DataTypes {
                     glfwInputProvider.scrollCallback(window, xoffset, yoffset);
                 }
             };
+            framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
+
+                @Override
+                public void invoke(long window, int width, int height) {
+                    glfwInputProvider.frameBufferSizeCallback(window,width,height);
+                }
+            };
+            windowSizeCallback = new GLFWWindowSizeCallback() {
+                @Override
+                public void invoke(long window, int width, int height) {
+                    glfwInputProvider.windowSizeCallback(window,width,height);
+                }
+            };
+            windowCloseCallback = new GLFWWindowCloseCallback() {
+
+                @Override
+                public void invoke(long l) {
+                    glfwInputProvider.windowCloseCallback(l);
+                }
+            };
+            windowFocusCallback = new GLFWWindowFocusCallback() {
+
+                @Override
+                public void invoke(long l, boolean b) {
+                    glfwInputProvider.windowFocusCallback(l,b);
+                }
+            };
+            windowMaximizeCallback = new GLFWWindowMaximizeCallback() {
+
+                @Override
+                public void invoke(long l, boolean b) {
+                    glfwInputProvider.windowMaximizeCallback(l,b);
+                }
+            };
+            windowPosCallback = new GLFWWindowPosCallback() {
+
+                @Override
+                public void invoke(long l, int i, int i1) {
+                    glfwInputProvider.windowPosCallback(l,i,i1);
+                }
+            };
             GLFW.glfwSetKeyCallback(context.handle(), keyCallback);
             GLFW.glfwSetMouseButtonCallback(context.handle(), mouseButtonCallback);
             GLFW.glfwSetCharCallback(context.handle(), charCallback);
             GLFW.glfwSetCursorPosCallback(context.handle(), cursorPosCallback);
             GLFW.glfwSetCursorEnterCallback(context.handle(), cursorEnterCallback);
             GLFW.glfwSetScrollCallback(context.handle(), scrollCallback);
+            GLFW.glfwSetFramebufferSizeCallback(context.handle(), framebufferSizeCallback);
+            GLFW.glfwSetWindowSizeCallback(context.handle(), windowSizeCallback);
+            GLFW.glfwSetWindowCloseCallback(context.handle(), windowCloseCallback);
+            GLFW.glfwSetWindowFocusCallback(context.handle(), windowFocusCallback);
+            GLFW.glfwSetWindowMaximizeCallback(context.handle(), windowMaximizeCallback);
+            GLFW.glfwSetWindowPosCallback(context.handle(), windowPosCallback);
+
         }
 
         public void free() {
@@ -100,6 +156,12 @@ public class DataTypes {
             cursorPosCallback.free();
             cursorEnterCallback.free();
             scrollCallback.free();
+            framebufferSizeCallback.free();
+            windowSizeCallback.free();
+            windowCloseCallback.free();
+            windowFocusCallback.free();
+            windowMaximizeCallback.free();
+            windowPosCallback.free();
         }
     }
 
@@ -217,7 +279,8 @@ public class DataTypes {
                 case 312 -> Input.Key.RIGHT_ALT;
                 case 349 -> Input.Key.RIGHT_SUPER;
                 case 0x3A -> Input.Key.CAPS_LOCK;
-                default -> Input.Key.UNKNOWN;};
+                default -> Input.Key.UNKNOWN;
+            };
         }
         return engineKey;
     }

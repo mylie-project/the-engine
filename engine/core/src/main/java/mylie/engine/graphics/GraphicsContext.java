@@ -1,12 +1,11 @@
 package mylie.engine.graphics;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import lombok.*;
 import mylie.engine.core.features.async.*;
+import mylie.util.Versioned;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
@@ -24,17 +23,19 @@ import org.joml.Vector2ic;
 @Getter
 @Setter(AccessLevel.PACKAGE)
 public abstract class GraphicsContext {
+    private final List<ApiFeature> apis = new ArrayList<>();
     private static int counter = 0;
     private final Configuration configuration;
     private final Async.Target target;
     private final BlockingQueue<Runnable> queue;
     private final FeatureThread featureThread;
-
+    private final Map<Graphics.ContextProperty<?>, Versioned<?>> properties;
     protected GraphicsContext(Configuration configuration, Scheduler scheduler) {
         this.configuration = configuration;
         configuration.context = this;
-        this.queue = new LinkedTransferQueue<>();
+        this.queue = new LinkedBlockingQueue<>();
         this.target = new Async.Target("GraphicsContext<" + (counter++) + ">");
+        this.properties=new HashMap<>();
         scheduler.registerTarget(target(), queue()::add);
         featureThread = scheduler.createFeatureThread(target(), queue());
     }
@@ -69,6 +70,15 @@ public abstract class GraphicsContext {
      * @return a Result<Boolean> indicating the success or failure of the buffer swap operation.
      */
     public abstract Result<Boolean> swapBuffers();
+
+    <T extends ApiFeature> T getApi(Class<T> apiClass) {
+        for (ApiFeature api : apis) {
+            if (apiClass.isAssignableFrom(api.getClass())) {
+                return apiClass.cast(api);
+            }
+        }
+        return null;
+    }
 
     /**
      * The `Parameters` class defines a collection of configuration parameters

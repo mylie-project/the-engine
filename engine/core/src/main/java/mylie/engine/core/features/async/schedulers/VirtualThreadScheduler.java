@@ -40,7 +40,7 @@ public class VirtualThreadScheduler extends SchedulerMultiThreaded
 
     @Override
     public void onDestroy() {
-        executorService.shutdown();
+        // executorService.shutdown();
     }
 
     @RequiredArgsConstructor

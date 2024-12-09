@@ -19,6 +19,8 @@ public class Engine {
     public interface Barriers {
         Class<? extends FeatureBarrier> FramePreparation = FeatureBarrier.FramePreparation.class;
         Class<? extends FeatureBarrier> ApplicationLogic = FeatureBarrier.AppLogic.class;
+        Class<? extends FeatureBarrier> AppRendering = FeatureBarrier.AppRendering.class;
+        Class<? extends FeatureBarrier> FrameComplete = FeatureBarrier.FrameComplete.class;
     }
 
     public interface Settings {

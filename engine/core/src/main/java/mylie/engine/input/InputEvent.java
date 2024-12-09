@@ -5,13 +5,66 @@ import lombok.Getter;
 import mylie.engine.graphics.GraphicsContext;
 import org.joml.Vector2ic;
 
+@Getter
 public abstract class InputEvent {
     final GraphicsContext graphicsContext;
 
     protected InputEvent(GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
     }
+    public abstract static class Window extends InputEvent {
+        public Window(GraphicsContext graphicsContext) {
+            super(graphicsContext);
+        }
+        @Getter
+        public static class Size extends Window {
+            final Vector2ic size;
+            public Size(GraphicsContext graphicsContext, Vector2ic size) {
+                super(graphicsContext);
+                this.size = size;
+            }
+        }
+        @Getter
+        public static class FramebufferSize extends Window {
+            final Vector2ic size;
+            public FramebufferSize(GraphicsContext graphicsContext, Vector2ic size) {
+                super(graphicsContext);
+                this.size = size;
+            }
+        }
+        @Getter
+        public static class Close extends Window {
+            public Close(GraphicsContext graphicsContext) {
+                super(graphicsContext);
+            }
+        }
+        @Getter
+        public static class Focus extends Window {
+            final boolean focused;
+            public Focus(GraphicsContext graphicsContext, boolean focused) {
+                super(graphicsContext);
+                this.focused = focused;
+            }
+        }
+        @Getter
+        public static class Position extends Window {
+            final Vector2ic position;
+            public Position(GraphicsContext graphicsContext, Vector2ic position) {
+                super(graphicsContext);
+                this.position = position;
+            }
+        }
+        @Getter
+        public static class Maximized extends Window {
+            final boolean maximized;
+            public Maximized(GraphicsContext graphicsContext, boolean maximized) {
+                super(graphicsContext);
+                this.maximized = maximized;
+            }
+        }
+    }
 
+    @Getter
     public abstract static class Keyboard extends InputEvent {
         final InputDevice.Keyboard keyboard;
 
@@ -55,6 +108,15 @@ public abstract class InputEvent {
 
             @Getter(AccessLevel.NONE)
             int mods;
+        }
+
+        @Getter
+        public static class Text extends InputEvent {
+            private final char text;
+            public Text(GraphicsContext context,char text) {
+                super(context);
+                this.text=text;
+            }
         }
     }
 

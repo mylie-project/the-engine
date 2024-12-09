@@ -31,7 +31,7 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
         this.featureType = featureType;
         dependencies = new CopyOnWriteArrayList<>();
         executionTarget(Async.BACKGROUND);
-        executionMode(Async.Mode.Direct);
+        executionMode(null);
         executionCache(Cache.OneFrame);
     }
 
@@ -98,54 +98,48 @@ public abstract sealed class BaseFeature implements Feature permits CoreFeature,
         }
     };
 
-    private static Functions.F1<Boolean, BaseFeature, Timer.Time> updateFunction =
-            new Functions.F1<>("FeatureUpdateFunction") {
-                @Override
-                public Boolean run(BaseFeature feature, Timer.Time time) {
-                    if (!feature.initialized()) {
-                        feature.initialized(true);
-                        if (feature instanceof Lifecycle.InitDestroy initDestroyFeature) {
-                            log.trace(
-                                    "Feature<{}>.onInit()",
-                                    feature.featureType().getSimpleName());
-                            initDestroyFeature.onInit();
-                        }
-                    }
-                    waitForDependencies(feature, time);
-                    if (feature instanceof Lifecycle.EnableDisable enableDisableFeature) {
-                        if (feature.requestEnabled() != feature.alreadyEnabled()) {
-                            if (feature.requestEnabled()) {
-                                log.trace(
-                                        "Feature<{}>.onEnable()",
-                                        feature.featureType().getSimpleName());
-                                enableDisableFeature.onEnable();
-                                feature.alreadyEnabled(true);
-                            } else {
-                                log.trace(
-                                        "Feature<{}>.onDisable()",
-                                        feature.featureType().getSimpleName());
-                                enableDisableFeature.onDisable();
-                                feature.alreadyEnabled(false);
-                            }
-                            // Skip update if disabled
-                            if (!feature.requestEnabled()) {
-                                return true;
-                            }
-                        }
-                    }
-
-                    if (feature instanceof Lifecycle.Update updatableFeature) {
-                        log.trace(
-                                "Feature<{}>.onUpdate()", feature.featureType().getSimpleName());
-                        updatableFeature.onUpdate();
-                    } else if (feature instanceof Lifecycle.Update.Timed timedUpdatableFeature) {
-                        log.trace(
-                                "Feature<{}>.onUpdate({})",
-                                feature.featureType().getSimpleName(),
-                                time.getClass().getSimpleName());
-                        timedUpdatableFeature.onUpdate(time);
-                    }
-                    return true;
+    static Functions.F1<Boolean, BaseFeature, Timer.Time> updateFunction = new Functions.F1<>("FeatureUpdateFunction") {
+        @Override
+        public Boolean run(BaseFeature feature, Timer.Time time) {
+            if (!feature.initialized()) {
+                feature.initialized(true);
+                if (feature instanceof Lifecycle.InitDestroy initDestroyFeature) {
+                    log.trace("Feature<{}>.onInit()", feature.featureType().getSimpleName());
+                    initDestroyFeature.onInit();
                 }
-            };
+            }
+            waitForDependencies(feature, time);
+            if (feature instanceof Lifecycle.EnableDisable enableDisableFeature) {
+                if (feature.requestEnabled() != feature.alreadyEnabled()) {
+                    if (feature.requestEnabled()) {
+                        log.trace(
+                                "Feature<{}>.onEnable()", feature.featureType().getSimpleName());
+                        enableDisableFeature.onEnable();
+                        feature.alreadyEnabled(true);
+                    } else {
+                        log.trace(
+                                "Feature<{}>.onDisable()", feature.featureType().getSimpleName());
+                        enableDisableFeature.onDisable();
+                        feature.alreadyEnabled(false);
+                    }
+                    // Skip update if disabled
+                    if (!feature.requestEnabled()) {
+                        return true;
+                    }
+                }
+            }
+
+            if (feature instanceof Lifecycle.Update updatableFeature) {
+                log.trace("Feature<{}>.onUpdate()", feature.featureType().getSimpleName());
+                updatableFeature.onUpdate();
+            } else if (feature instanceof Lifecycle.Update.Timed timedUpdatableFeature) {
+                log.trace(
+                        "Feature<{}>.onUpdate({})",
+                        feature.featureType().getSimpleName(),
+                        time.getClass().getSimpleName());
+                timedUpdatableFeature.onUpdate(time);
+            }
+            return true;
+        }
+    };
 }

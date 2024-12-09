@@ -1,10 +1,10 @@
 package mylie.engine.core;
 
 import lombok.extern.slf4j.Slf4j;
+import mylie.util.configuration.Configuration;
 
 @Slf4j
-public sealed class AppFeature extends BaseFeature implements BaseFeature.App
-        permits AppFeature.Sequential, AppFeature.Async {
+public non-sealed class AppFeature extends BaseFeature implements BaseFeature.App {
     public AppFeature(Class<? extends Feature> featureType) {
         super(featureType);
     }
@@ -26,19 +26,29 @@ public sealed class AppFeature extends BaseFeature implements BaseFeature.App
         super.remove(feature);
     }
 
-    public static non-sealed class Sequential extends AppFeature {
+    public abstract static class Sequential extends AppFeature {
 
         public Sequential(Class<? extends Feature> featureType) {
             super(featureType);
+            executionMode(mylie.engine.core.features.async.Async.Mode.Direct);
         }
     }
 
-    public static non-sealed class Async extends AppFeature {
+    public abstract static class Async extends AppFeature {
 
         public Async(Class<? extends Feature> featureType) {
             super(featureType);
             executionMode(mylie.engine.core.features.async.Async.Mode.Async);
+            executionTarget(mylie.engine.core.features.async.Async.BACKGROUND);
         }
+
+        @Override
+        protected void onSetup(FeatureManager featureManager, Configuration<Engine> engineConfiguration) {
+            super.onSetup(featureManager, engineConfiguration);
+            this.onSetupDependencies();
+        }
+
+        protected abstract void onSetupDependencies();
 
         @Override
         protected <T extends BaseFeature> void runAfter(Class<T> featureClass) {

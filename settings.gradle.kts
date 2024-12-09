@@ -12,6 +12,9 @@ project(":lwjgl3.glfw").projectDir=file("backends/lwjgl3/glfw")
 include("lwjgl3.opengl")
 project(":lwjgl3.opengl").projectDir=file("backends/lwjgl3/opengl")
 
+include("lwjgl3.imgui")
+project(":lwjgl3.imgui").projectDir=file("backends/lwjgl3/imgui")
+
 include("examples.tests")
 project(":examples.tests").projectDir=file("examples/tests")
 
@@ -27,7 +30,7 @@ dependencyResolutionManagement{
             version("slf4j","2.0.16")
             version("joml","1.10.7")
             version("lwjgl3","3.3.4")
-            version("imgui","1.87.4")
+            version("imgui","1.87.6")
 
             library("lombok","org.projectlombok","lombok").versionRef("lombok")
             library("logging.api","org.slf4j","slf4j-api").versionRef("slf4j")

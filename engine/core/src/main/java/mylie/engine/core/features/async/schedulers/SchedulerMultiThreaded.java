@@ -94,6 +94,7 @@ public class SchedulerMultiThreaded extends Scheduler {
                     if (poll != null) {
                         poll.run();
                     }
+
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

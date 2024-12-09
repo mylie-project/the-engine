@@ -1,8 +1,6 @@
 package mylie.engine.core;
 
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TransferQueue;
+import java.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.ApplicationManager;
 import mylie.engine.core.features.async.Async;
@@ -17,7 +15,7 @@ import mylie.util.configuration.Setting;
 public class Core {
     private final Configuration<Engine> engineConfiguration;
     private final FeatureManager featureManager;
-    private final TransferQueue<Runnable> engineTaskQueue;
+    private final BlockingQueue<Runnable> engineTaskQueue;
     private Engine.ShutdownReason shutdownReason;
     private Scheduler scheduler;
     private boolean shutdownComplete = false;
@@ -25,7 +23,7 @@ public class Core {
     public Core(Configuration<Engine> engineConfiguration) {
         this.engineConfiguration = engineConfiguration;
         this.featureManager = new FeatureManager(engineConfiguration);
-        this.engineTaskQueue = new LinkedTransferQueue<>();
+        this.engineTaskQueue = new LinkedBlockingQueue<>();
     }
 
     public Engine.ShutdownReason onStart() {

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.*;
+import mylie.engine.core.features.async.Async;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
@@ -23,6 +24,7 @@ public abstract class Timer extends CoreFeature implements BaseFeature.Core, Lif
     protected Timer(Settings settings) {
         super(Timer.class);
         this.settings = settings;
+        executionMode(Async.Mode.Direct);
     }
 
     @Override
@@ -36,13 +38,15 @@ public abstract class Timer extends CoreFeature implements BaseFeature.Core, Lif
         this.settings.appTimeModifier(modifier);
     }
 
+
+
     @Override
     public void onUpdate() {
         time = getNewTime();
         logInterval += (float) time.delta();
         count++;
         if (logInterval > settings().fpsLogInterval()) {
-            log.info("FPS: {}", count);
+            //log.info("FPS: {}", count);
             count = 0;
             logInterval = 0;
         }

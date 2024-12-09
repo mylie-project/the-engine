@@ -4,7 +4,7 @@ import static mylie.engine.core.features.async.Async.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Queue;
-import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import mylie.engine.core.features.async.schedulers.SchedulerSingleThreaded;
@@ -103,8 +103,8 @@ public class SchedulerTest {
 
     private static final Target q1 = new Target("1");
     private static final Target q2 = new Target("2");
-    private static final Queue<Runnable> queue1 = new LinkedTransferQueue<>();
-    private static final Queue<Runnable> queue2 = new LinkedTransferQueue<>();
+    private static final Queue<Runnable> queue1 = new LinkedBlockingQueue<>();
+    private static final Queue<Runnable> queue2 = new LinkedBlockingQueue<>();
 
     private static void setupQueues(Scheduler scheduler) {
         scheduler.registerTarget(q1, queue1::add);

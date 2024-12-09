@@ -8,12 +8,14 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.Engine;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Scheduler;
+import mylie.engine.core.features.timer.Timer;
 import mylie.engine.graphics.ContextProvider;
 import mylie.engine.graphics.Graphics;
 import mylie.engine.graphics.GraphicsContext;
@@ -30,6 +32,7 @@ import org.lwjgl.stb.STBImage;
 @Slf4j
 @Getter(AccessLevel.PROTECTED)
 public abstract class GlfwContextProvider extends ContextProvider implements GLFWErrorCallbackI {
+    private Timer timer;
     private Scheduler scheduler;
     private final GlfwInputProvider inputProvider;
     private Graphics.Display primaryDisplay;
@@ -126,6 +129,8 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     public List<Graphics.Display> onInitialize(
             FeatureManager featureManager, Configuration<Engine> engineConfiguration) {
         scheduler = featureManager.get(Scheduler.class);
+        timer=featureManager.get(Timer.class);
+        inputProvider.timer(timer);
         GLFW.glfwSetErrorCallback(this);
         if (!GLFW.glfwInit()) {
             throw new RuntimeException("Unable to initialize GLFW");
@@ -219,6 +224,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             } else {
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
+            Graphics.ContextProperties.Position.set(contexts,new Vector2i(0,0),timer.time().frameId());
         } else if (videoMode instanceof GraphicsContext.VideoMode.Fullscreen fullscreenMode) {
             fullscreen = true;
             if (fullscreenMode.display() != null) {
@@ -232,6 +238,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 display = ((DataTypes.GlfwDisplay) primaryDisplay).handle();
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
+            Graphics.ContextProperties.Position.set(contexts,new Vector2i(0,0),timer.time().frameId());
         }
 
         if (parent != NULL) {
@@ -254,10 +261,13 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 position = windowed.position();
             }
             GLFW.glfwSetWindowPos(window, position.x(), position.y());
+            Graphics.ContextProperties.Position.set(contexts,position,timer.time().frameId());
         }
         contexts.handle = window;
         inputProvider.addContext(contexts);
         setIconsWrapper(window, configuration.get(GraphicsContext.Parameters.Icons));
+        Graphics.ContextProperties.Size.set(contexts,size,timer.time().frameId());
+        Graphics.ContextProperties.FrameBufferSize.set(contexts,size,timer.time().frameId());
         GLFW.glfwShowWindow(window);
         return true;
     }

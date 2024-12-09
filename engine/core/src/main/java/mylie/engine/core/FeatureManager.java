@@ -1,18 +1,23 @@
 package mylie.engine.core;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import mylie.engine.core.features.async.*;
+import mylie.engine.core.features.timer.Timer;
 import mylie.util.configuration.Configuration;
 
 @Slf4j
+@Getter(AccessLevel.PACKAGE)
 public class FeatureManager {
     private final Configuration<Engine> engineConfiguration;
     private final List<Feature> featureList;
 
     public FeatureManager(Configuration<Engine> engineConfiguration) {
         this.engineConfiguration = engineConfiguration;
-        featureList = new ArrayList<>();
+        featureList = new CopyOnWriteArrayList<>();
     }
 
     public <F extends Feature> void add(F feature) {
@@ -54,5 +59,18 @@ public class FeatureManager {
         }
         List<Result<Boolean>> list = results.stream().filter(Objects::nonNull).toList();
         Async.await(list);
+    }
+
+    public Result<Boolean> updateFeature(Async.Mode mode, BaseFeature feature) {
+        Timer.Time time = get(Timer.class).time();
+        return feature.update();
+        /*return Async.async(
+        mode==null?feature.executionMode():mode,
+        feature.executionCache(),
+        feature.executionTarget(),
+        time.frameId(),
+        BaseFeature.updateFunction,
+        feature,
+        time);*/
     }
 }

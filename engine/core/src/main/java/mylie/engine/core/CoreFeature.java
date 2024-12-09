@@ -1,5 +1,6 @@
 package mylie.engine.core;
 
+import java.util.List;
 import mylie.engine.core.features.async.Async;
 
 public non-sealed class CoreFeature extends BaseFeature implements BaseFeature.Core {
@@ -21,6 +22,14 @@ public non-sealed class CoreFeature extends BaseFeature implements BaseFeature.C
     public CoreFeature executionMode(Async.Mode mode) {
         super.executionMode(mode);
         return this;
+    }
+
+    public List<Feature> features() {
+        return super.featureManager().featureList();
+    }
+
+    public FeatureManager featureManager() {
+        return super.featureManager();
     }
 
     @Override

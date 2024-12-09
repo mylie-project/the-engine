@@ -93,7 +93,7 @@ public final class Async {
         Set<Result<R>> results = new HashSet<>();
         Mode currentMode;
         for (Object object : objects) {
-            currentMode = mode == Mode.Direct && canExecuteDirect(target) ? Mode.Direct : Mode.Async;
+            currentMode = mode;
             if (targetType.isAssignableFrom(object.getClass())) {
                 T object1 = targetType.cast(object);
                 results.add(async(currentMode, cache, target, frameId, function, object1));
@@ -117,7 +117,7 @@ public final class Async {
             if (targetType.isAssignableFrom(object.getClass())) {
                 T object1 = targetType.cast(object);
                 currentTarget = target.apply(object1);
-                currentMode = mode == Mode.Direct && canExecuteDirect(currentTarget) ? Mode.Direct : Mode.Async;
+                currentMode = mode;
                 results.add(async(currentMode, cache, currentTarget, frameId, function, object1));
             }
         }
@@ -126,12 +126,9 @@ public final class Async {
 
     private static <R> Result<R> executeTask(
             Tasks<R> tasks, Mode mode, int hashCode, long frameId, Cache cache, Target target) {
-        if (mode == Mode.Direct || canExecuteDirect(target)) {
-            // To avoid a dependency loop we have to set the cache result before executing the task.
-            // Not sure yet if this leads to possible null results.
+        if (canExecuteDirect(target, mode)) {
             Result.FixedResult<R> result = new Result.FixedResult<>(hashCode, frameId, tasks.execute());
             cache.set(hashCode, result);
-            // result.value = tasks.execute();
             return result;
         } else {
             return scheduler.executeTask(tasks, hashCode, frameId, cache, target);
@@ -159,8 +156,17 @@ public final class Async {
         return Objects.hash(function, Arrays.hashCode(objects));
     }
 
-    private static boolean canExecuteDirect(Target target) {
-        if (target == BACKGROUND) return true;
-        return Thread.currentThread().getName().equals(target.name());
+    private static boolean canExecuteDirect(Target target, Async.Mode mode) {
+        if (mode == Mode.Async) {
+            return false;
+        } else {
+            if (mode == Mode.Direct || mode == null) {
+                if (target == BACKGROUND || Thread.currentThread().getName().startsWith("virtual")) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 }

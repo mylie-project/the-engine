@@ -1,12 +1,10 @@
 package mylie.engine.application;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
-import mylie.engine.core.CoreFeature;
+import mylie.engine.core.*;
 import mylie.engine.core.Engine.Barriers;
-import mylie.engine.core.FeatureManager;
-import mylie.engine.core.Lifecycle;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.input.InputModule;
@@ -29,7 +27,7 @@ public class ApplicationManager extends CoreFeature implements Lifecycle.Update.
         super.onSetup(featureManager, engineConfiguration);
         application = engineConfiguration.get(mylie.engine.core.Engine.Settings.Application);
         appFeatureManager = new mylie.engine.application.Application.Manager(featureManager);
-        applicationQueue = new LinkedTransferQueue<>();
+        applicationQueue = new LinkedBlockingQueue<>();
         Scheduler scheduler = get(Scheduler.class);
         scheduler.registerTarget(Async.APPLICATION, applicationQueue::add);
         featureThread = scheduler.createFeatureThread(Async.APPLICATION, applicationQueue);
@@ -58,6 +56,7 @@ public class ApplicationManager extends CoreFeature implements Lifecycle.Update.
                 Async.APPLICATION,
                 time.frameId(),
                 updateApplication,
+                this,
                 application,
                 time));
     }
@@ -93,10 +92,18 @@ public class ApplicationManager extends CoreFeature implements Lifecycle.Update.
                 }
             };
 
-    private static final Functions.F1<Boolean, mylie.engine.application.Application, Timer.Time> updateApplication =
-            new Functions.F1<>("UpdateApplication") {
+    private static final Functions.F2<Boolean, ApplicationManager, mylie.engine.application.Application, Timer.Time>
+            updateApplication = new Functions.F2<>("UpdateApplication") {
                 @Override
-                protected Boolean run(mylie.engine.application.Application application, Timer.Time time) {
+                protected Boolean run(
+                        ApplicationManager appManager,
+                        mylie.engine.application.Application application,
+                        Timer.Time time) {
+                    for (Feature feature : appManager.features()) {
+                        if (feature instanceof AppFeature.Sequential sequential) {
+                            Async.await(appManager.featureManager().updateFeature(Async.Mode.Direct, sequential));
+                        }
+                    }
                     application.onUpdate(time);
                     return true;
                 }
