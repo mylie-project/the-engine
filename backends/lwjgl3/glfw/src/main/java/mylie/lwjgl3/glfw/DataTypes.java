@@ -15,6 +15,7 @@ import org.joml.Vector4ic;
 import org.lwjgl.glfw.*;
 
 public class DataTypes {
+
     @Getter(AccessLevel.PACKAGE)
     @Setter(AccessLevel.PACKAGE)
     static class GlfwDisplay extends Graphics.Display {
@@ -97,13 +98,13 @@ public class DataTypes {
 
                 @Override
                 public void invoke(long window, int width, int height) {
-                    glfwInputProvider.frameBufferSizeCallback(window,width,height);
+                    glfwInputProvider.frameBufferSizeCallback(window, width, height);
                 }
             };
             windowSizeCallback = new GLFWWindowSizeCallback() {
                 @Override
                 public void invoke(long window, int width, int height) {
-                    glfwInputProvider.windowSizeCallback(window,width,height);
+                    glfwInputProvider.windowSizeCallback(window, width, height);
                 }
             };
             windowCloseCallback = new GLFWWindowCloseCallback() {
@@ -117,21 +118,21 @@ public class DataTypes {
 
                 @Override
                 public void invoke(long l, boolean b) {
-                    glfwInputProvider.windowFocusCallback(l,b);
+                    glfwInputProvider.windowFocusCallback(l, b);
                 }
             };
             windowMaximizeCallback = new GLFWWindowMaximizeCallback() {
 
                 @Override
                 public void invoke(long l, boolean b) {
-                    glfwInputProvider.windowMaximizeCallback(l,b);
+                    glfwInputProvider.windowMaximizeCallback(l, b);
                 }
             };
             windowPosCallback = new GLFWWindowPosCallback() {
 
                 @Override
                 public void invoke(long l, int i, int i1) {
-                    glfwInputProvider.windowPosCallback(l,i,i1);
+                    glfwInputProvider.windowPosCallback(l, i, i1);
                 }
             };
             GLFW.glfwSetKeyCallback(context.handle(), keyCallback);
@@ -146,7 +147,6 @@ public class DataTypes {
             GLFW.glfwSetWindowFocusCallback(context.handle(), windowFocusCallback);
             GLFW.glfwSetWindowMaximizeCallback(context.handle(), windowMaximizeCallback);
             GLFW.glfwSetWindowPosCallback(context.handle(), windowPosCallback);
-
         }
 
         public void free() {
@@ -162,6 +162,60 @@ public class DataTypes {
             windowFocusCallback.free();
             windowMaximizeCallback.free();
             windowPosCallback.free();
+        }
+    }
+
+    public static Input.GamepadButton convertGampadButton(int i) {
+        switch (i) {
+            case GLFW_GAMEPAD_BUTTON_A:
+                return Input.GamepadButton.A;
+            case GLFW_GAMEPAD_BUTTON_B:
+                return Input.GamepadButton.B;
+            case GLFW_GAMEPAD_BUTTON_X:
+                return Input.GamepadButton.X;
+            case GLFW_GAMEPAD_BUTTON_Y:
+                return Input.GamepadButton.Y;
+            case GLFW_GAMEPAD_BUTTON_LEFT_BUMPER:
+                return Input.GamepadButton.LEFT_BUMPER;
+            case GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER:
+                return Input.GamepadButton.RIGHT_BUMPER;
+            case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
+                return Input.GamepadButton.DPAD_DOWN;
+            case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
+                return Input.GamepadButton.DPAD_LEFT;
+            case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
+                return Input.GamepadButton.DPAD_RIGHT;
+            case GLFW_GAMEPAD_BUTTON_DPAD_UP:
+                return Input.GamepadButton.DPAD_UP;
+            case GLFW_GAMEPAD_BUTTON_START:
+                return Input.GamepadButton.START;
+            case GLFW_GAMEPAD_BUTTON_BACK:
+                return Input.GamepadButton.SELECT;
+            case GLFW_GAMEPAD_BUTTON_LEFT_THUMB:
+                return Input.GamepadButton.LEFT_THUMP;
+            case GLFW_GAMEPAD_BUTTON_RIGHT_THUMB:
+                return Input.GamepadButton.RIGHT_THUMP;
+            default:
+                return new Input.GamepadButton("UNKNOWN" + i);
+        }
+    }
+
+    public static Input.GamepadAxis convertGampadAxis(int i) {
+        switch (i) {
+            case GLFW_GAMEPAD_AXIS_LEFT_X:
+                return Input.GamepadAxis.LEFT_STICK_X;
+            case GLFW_GAMEPAD_AXIS_LEFT_Y:
+                return Input.GamepadAxis.LEFT_STICK_Y;
+            case GLFW_GAMEPAD_AXIS_RIGHT_X:
+                return Input.GamepadAxis.RIGHT_STICK_X;
+            case GLFW_GAMEPAD_AXIS_RIGHT_Y:
+                return Input.GamepadAxis.RIGHT_STICK_Y;
+            case GLFW_GAMEPAD_AXIS_LEFT_TRIGGER:
+                return Input.GamepadAxis.LEFT_TRIGGER;
+            case GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER:
+                return Input.GamepadAxis.RIGHT_TRIGGER;
+            default:
+                return new Input.GamepadAxis("UNKNOWN" + i);
         }
     }
 

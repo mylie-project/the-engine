@@ -83,6 +83,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
                 return null;
             }
             GraphicsContext context = contextProvider.createContext(contextSettings, primaryContext);
+            Graphics.ContextCapability.initAll(context);
             context.featureThread().start();
             if (synced) {
                 syncedContexts.add(context);

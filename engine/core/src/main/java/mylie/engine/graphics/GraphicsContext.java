@@ -20,24 +20,50 @@ import org.joml.Vector2ic;
  * Subclasses must provide concrete implementations for the resource management
  * and rendering operations specified by abstract methods in this class.
  */
-@Getter
+@Getter(AccessLevel.PROTECTED)
 @Setter(AccessLevel.PACKAGE)
 public abstract class GraphicsContext {
     private final List<ApiFeature> apis = new ArrayList<>();
     private static int counter = 0;
+
+    @Getter(AccessLevel.PUBLIC)
     private final Configuration configuration;
+
+    @Getter(AccessLevel.PUBLIC)
     private final Async.Target target;
+
     private final BlockingQueue<Runnable> queue;
     private final FeatureThread featureThread;
     private final Map<Graphics.ContextProperty<?>, Versioned<?>> properties;
+    private final Map<Graphics.ContextCapability<?>, Object> capabilities;
+    private final List<ApiFeature> apiFeatures;
+
     protected GraphicsContext(Configuration configuration, Scheduler scheduler) {
         this.configuration = configuration;
         configuration.context = this;
         this.queue = new LinkedBlockingQueue<>();
         this.target = new Async.Target("GraphicsContext<" + (counter++) + ">");
-        this.properties=new HashMap<>();
+        this.properties = new HashMap<>();
+        this.capabilities = new HashMap<>();
+        this.apiFeatures = new ArrayList<>();
         scheduler.registerTarget(target(), queue()::add);
         featureThread = scheduler.createFeatureThread(target(), queue());
+    }
+
+    public <T extends ApiFeature> T getApiFeature(Class<T> type) {
+        for (ApiFeature apiFeature : apiFeatures) {
+            if (type.isAssignableFrom(apiFeature.getClass())) {
+                return type.cast(apiFeature);
+            }
+        }
+        return null;
+    }
+
+    public <T extends ApiFeature> T addApiFeature(T apiFeature) {
+        if (!apiFeatures.contains(apiFeature)) {
+            apiFeatures.add(apiFeature);
+        }
+        return apiFeature;
     }
 
     /**

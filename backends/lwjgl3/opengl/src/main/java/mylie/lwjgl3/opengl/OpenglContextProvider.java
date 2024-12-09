@@ -6,8 +6,11 @@ import mylie.engine.core.features.async.Functions;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.lwjgl3.glfw.GlfwContext;
 import mylie.lwjgl3.glfw.GlfwContextProvider;
+import mylie.lwjgl3.opengl.api.GlBase;
 
 public class OpenglContextProvider extends GlfwContextProvider {
+    public OpenglContextProvider() {}
+
     @Override
     public GraphicsContext createContext(
             GraphicsContext.Configuration contextSettings, GraphicsContext primaryContext) {
@@ -17,7 +20,12 @@ public class OpenglContextProvider extends GlfwContextProvider {
                 Async.async(Async.Mode.Async, Cache.Never, Async.ENGINE, -1, CreateContext, this, glfwContext));
         glfwContext.makeCurrent();
         glfwContext.createGlCapabilities();
+        addBaseApiFeatures(glfwContext);
         return glfwContext;
+    }
+
+    private void addBaseApiFeatures(OpenGlContext glfwContext) {
+        glfwContext.addApiFeature(new GlBase());
     }
 
     private void setupApi(GlfwContext glfwContext) {

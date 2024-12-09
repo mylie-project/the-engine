@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GLCapabilities;
 
 @Getter(AccessLevel.PACKAGE)
 public class OpenGlContext extends GlfwContext {
-    private GLCapabilities capabilities;
+    private GLCapabilities glCapabilities;
 
     public OpenGlContext(Configuration settings, GlfwContextProvider provider, GlfwContext primaryContext) {
         super(settings, provider, primaryContext);
@@ -27,7 +27,7 @@ public class OpenGlContext extends GlfwContext {
             new Functions.F0<>("CreateGlCapabilities") {
                 @Override
                 protected Boolean run(OpenGlContext o) {
-                    o.capabilities = GL.createCapabilities();
+                    o.glCapabilities = GL.createCapabilities();
 
                     return true;
                 }

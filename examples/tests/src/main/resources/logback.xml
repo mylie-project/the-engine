@@ -10,6 +10,7 @@
 
     <logger name="mylie.engine.core.features.async" level="info" />
     <logger name="mylie.lwjgl3" level="info" />
+    <logger name="mylie.engine.graphics" level="trace" />
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

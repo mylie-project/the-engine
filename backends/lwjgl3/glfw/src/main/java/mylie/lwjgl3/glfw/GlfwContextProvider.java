@@ -8,7 +8,6 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -129,7 +128,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     public List<Graphics.Display> onInitialize(
             FeatureManager featureManager, Configuration<Engine> engineConfiguration) {
         scheduler = featureManager.get(Scheduler.class);
-        timer=featureManager.get(Timer.class);
+        timer = featureManager.get(Timer.class);
         inputProvider.timer(timer);
         GLFW.glfwSetErrorCallback(this);
         if (!GLFW.glfwInit()) {
@@ -224,7 +223,8 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             } else {
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
-            Graphics.ContextProperties.Position.set(contexts,new Vector2i(0,0),timer.time().frameId());
+            Graphics.ContextProperties.Position.set(
+                    contexts, new Vector2i(0, 0), timer.time().frameId());
         } else if (videoMode instanceof GraphicsContext.VideoMode.Fullscreen fullscreenMode) {
             fullscreen = true;
             if (fullscreenMode.display() != null) {
@@ -238,7 +238,8 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 display = ((DataTypes.GlfwDisplay) primaryDisplay).handle();
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
-            Graphics.ContextProperties.Position.set(contexts,new Vector2i(0,0),timer.time().frameId());
+            Graphics.ContextProperties.Position.set(
+                    contexts, new Vector2i(0, 0), timer.time().frameId());
         }
 
         if (parent != NULL) {
@@ -261,13 +262,15 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 position = windowed.position();
             }
             GLFW.glfwSetWindowPos(window, position.x(), position.y());
-            Graphics.ContextProperties.Position.set(contexts,position,timer.time().frameId());
+            Graphics.ContextProperties.Position.set(
+                    contexts, position, timer.time().frameId());
         }
         contexts.handle = window;
         inputProvider.addContext(contexts);
         setIconsWrapper(window, configuration.get(GraphicsContext.Parameters.Icons));
-        Graphics.ContextProperties.Size.set(contexts,size,timer.time().frameId());
-        Graphics.ContextProperties.FrameBufferSize.set(contexts,size,timer.time().frameId());
+        Graphics.ContextProperties.Size.set(contexts, size, timer.time().frameId());
+        Graphics.ContextProperties.FrameBufferSize.set(
+                contexts, size, timer.time().frameId());
         GLFW.glfwShowWindow(window);
         return true;
     }

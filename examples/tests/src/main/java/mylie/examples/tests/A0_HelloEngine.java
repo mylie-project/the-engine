@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.EngineManager;
-import mylie.engine.core.features.async.schedulers.SingleThreadSchedulerSettings;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.graphics.GraphicsManager;
@@ -28,12 +27,11 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
     GraphicsContext.VideoMode fullscreen = new GraphicsContext.VideoMode.Fullscreen(null, null);
     boolean tmp = false;
 
-
     public static void main(String[] args) {
         PlatformDesktop platform = new PlatformDesktop();
         Configuration<Engine> engineConfiguration = platform.initialize();
         engineConfiguration.set(Engine.Settings.Application, new A0_HelloEngine());
-        //engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
+        // engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
         engineConfiguration.set(Engine.Settings.GraphicsApi, new OpenglSettings());
         Engine.ShutdownReason start = Engine.start(engineConfiguration, true, false);
         log.info(start.toString());
@@ -54,8 +52,8 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         configuration.set(GraphicsContext.Parameters.Icons, IconFactory.getDefaultIcons());
         graphicsContext = graphicsManager.createContext(configuration, true);
 
-         addFeature(new ImGuiRenderer());
-         getFeature(ImGuiRenderer.class).addRenderContext(graphicsContext);
+        addFeature(new ImGuiRenderer());
+        getFeature(ImGuiRenderer.class).addRenderContext(graphicsContext);
     }
 
     @Override
@@ -68,6 +66,9 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
 
     @Override
     public void onEvent(InputEvent event) {
+        if (event instanceof InputEvent.Gamepad gamepadEvent) {
+            log.info(gamepadEvent.toString());
+        }
         if (event instanceof InputEvent.Keyboard.Key keyEvent) {
             if (keyEvent.key().equals(Input.Key.ESCAPE)) {
                 getFeature(EngineManager.class).shutdown(new Engine.ShutdownReason.UserRequest("Escape"));

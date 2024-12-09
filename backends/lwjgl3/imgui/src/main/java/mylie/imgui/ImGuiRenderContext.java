@@ -9,7 +9,6 @@ import imgui.extension.implot.ImPlot;
 import imgui.extension.implot.ImPlotContext;
 import imgui.extension.implot.flag.ImPlotAxis;
 import imgui.extension.implot.flag.ImPlotAxisFlags;
-import imgui.flag.ImGuiKey;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.internal.ImGuiContext;
@@ -44,7 +43,7 @@ public class ImGuiRenderContext {
     ImPlotContext imPlotContext;
     ImGuiImplGl3 imGuiImplGl3;
     float[] frameTime;
-    int currFrame=0;
+    int currFrame = 0;
     private static final ImFloat EXAMPLE_TICK_KNOB_VAL = new ImFloat(0);
     private static final ImFloat EXAMPLE_DOT_KNOB_VAL = new ImFloat(0);
     private static final ImFloat EXAMPLE_SPACE_KNOB_VAL = new ImFloat(0);
@@ -59,17 +58,17 @@ public class ImGuiRenderContext {
         imGuiContext(ImGui.createContext());
         imPlotContext(ImPlot.createContext());
         imGuiImplGl3(new ImGuiImplGl3());
-        this.frameBufferSize= Graphics.ContextProperties.FrameBufferSize.get(graphicsContext);
+        this.frameBufferSize = Graphics.ContextProperties.FrameBufferSize.get(graphicsContext);
         frameTime = new float[120 * 10];
         Async.async(Async.Mode.Async, Cache.OneFrame, graphicsContext.target(), -1, InitContext, this);
     }
 
     protected void render(Timer.Time time) {
         currFrame++;
-        if(time.delta()*1000 > 40){
-            //log.error("spike: {}",time.frameId());
+        if (time.delta() * 1000 > 40) {
+            // log.error("spike: {}",time.frameId());
         }
-        frameTime[currFrame%frameTime.length] = (float) (time.delta() * 1000);
+        frameTime[currFrame % frameTime.length] = (float) (time.delta() * 1000);
         ImGui.setCurrentContext(imGuiContext);
         ImPlot.setCurrentContext(imPlotContext);
         Vector2ic vector2ic = this.frameBufferSize.get();
@@ -85,8 +84,9 @@ public class ImGuiRenderContext {
             ImPlot.beginPlot("Frametime");
             ImPlot.setupAxis(ImPlotAxis.Y1, "ms", ImPlotAxisFlags.AutoFit | ImPlotAxisFlags.NoMenus);
             ImPlot.setupAxis(ImPlotAxis.X1, "ms", ImPlotAxisFlags.AutoFit | ImPlotAxisFlags.NoMenus);
-            ImPlot.plotLine("Frametime", frameTime, frameTime.length);;
-            ImPlot.plotVLines("Frame",new int[]{currFrame%frameTime.length});
+            ImPlot.plotLine("Frametime", frameTime, frameTime.length);
+            ;
+            ImPlot.plotVLines("Frame", new int[] {currFrame % frameTime.length});
             ImPlot.endPlot();
         }
 
@@ -216,11 +216,13 @@ public class ImGuiRenderContext {
                 ImGui.getIO().addMouseWheelEvent(0, wheelEvent.amount());
             }
         }
-        if(event instanceof InputEvent.Keyboard.Text textEvent ){
+        if (event instanceof InputEvent.Keyboard.Text textEvent) {
             ImGui.getIO().addInputCharacter(textEvent.text());
         }
-        if(event instanceof InputEvent.Keyboard.Key keyEvent ){
-            ImGui.getIO().addKeyEvent(ImGuiUtil.toImgui(keyEvent.key()), keyEvent.type() == InputEvent.Keyboard.Key.Type.PRESSED);
+        if (event instanceof InputEvent.Keyboard.Key keyEvent) {
+            ImGui.getIO()
+                    .addKeyEvent(
+                            ImGuiUtil.toImgui(keyEvent.key()), keyEvent.type() == InputEvent.Keyboard.Key.Type.PRESSED);
         }
     }
 

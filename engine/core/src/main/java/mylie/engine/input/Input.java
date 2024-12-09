@@ -123,4 +123,30 @@ public interface Input {
         public static final MouseButton BUTTON_8 = new MouseButton("BUTTON_8");
         public static final MouseButton UNKNOWN = new MouseButton("UNKNOWN");
     }
+
+    record GamepadButton(String name) {
+        public static final GamepadButton A = new GamepadButton("CIRCLE");
+        public static final GamepadButton B = new GamepadButton("CROSS");
+        public static final GamepadButton X = new GamepadButton("SQUARE");
+        public static final GamepadButton Y = new GamepadButton("TRIANGLE");
+        public static final GamepadButton LEFT_BUMPER = new GamepadButton("LEFT_BUMPER");
+        public static final GamepadButton RIGHT_BUMPER = new GamepadButton("RIGHT_BUMPER");
+        public static final GamepadButton LEFT_THUMP = new GamepadButton("LEFT_THUMP");
+        public static final GamepadButton RIGHT_THUMP = new GamepadButton("RIGHT_THUMP");
+        public static final GamepadButton START = new GamepadButton("START");
+        public static final GamepadButton SELECT = new GamepadButton("SELECT");
+        public static final GamepadButton DPAD_LEFT = new GamepadButton("DPAD_LEFT");
+        public static final GamepadButton DPAD_RIGHT = new GamepadButton("DPAD_RIGHT");
+        public static final GamepadButton DPAD_UP = new GamepadButton("DPAD_UP");
+        public static final GamepadButton DPAD_DOWN = new GamepadButton("DPAD_DOWN");
+    }
+
+    record GamepadAxis(String name) {
+        public static final GamepadAxis LEFT_STICK_X = new GamepadAxis("LEFT_STICK_X");
+        public static final GamepadAxis LEFT_STICK_Y = new GamepadAxis("LEFT_STICK_Y");
+        public static final GamepadAxis RIGHT_STICK_X = new GamepadAxis("RIGHT_STICK_X");
+        public static final GamepadAxis RIGHT_STICK_Y = new GamepadAxis("RIGHT_STICK_Y");
+        public static final GamepadAxis LEFT_TRIGGER = new GamepadAxis("LEFT_TRIGGER");
+        public static final GamepadAxis RIGHT_TRIGGER = new GamepadAxis("RIGHT_TRIGGER");
+    }
 }
