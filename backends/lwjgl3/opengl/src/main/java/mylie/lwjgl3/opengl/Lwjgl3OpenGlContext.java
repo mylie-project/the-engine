@@ -12,10 +12,10 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 @Getter(AccessLevel.PACKAGE)
-public class OpenGlContext extends GlfwContext {
+public class Lwjgl3OpenGlContext extends GlfwContext {
     private GLCapabilities glCapabilities;
 
-    public OpenGlContext(Configuration settings, GlfwContextProvider provider, GlfwContext primaryContext) {
+    public Lwjgl3OpenGlContext(Configuration settings, GlfwContextProvider provider, GlfwContext primaryContext) {
         super(settings, provider, primaryContext);
     }
 
@@ -23,10 +23,10 @@ public class OpenGlContext extends GlfwContext {
         return Async.async(Async.Mode.Async, Cache.Never, target(), -1, CreateGlCapabilities, this);
     }
 
-    private static final Functions.F0<Boolean, OpenGlContext> CreateGlCapabilities =
+    private static final Functions.F0<Boolean, Lwjgl3OpenGlContext> CreateGlCapabilities =
             new Functions.F0<>("CreateGlCapabilities") {
                 @Override
-                protected Boolean run(OpenGlContext o) {
+                protected Boolean run(Lwjgl3OpenGlContext o) {
                     o.glCapabilities = GL.createCapabilities();
 
                     return true;

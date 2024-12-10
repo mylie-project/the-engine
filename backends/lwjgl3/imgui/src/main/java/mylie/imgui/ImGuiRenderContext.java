@@ -60,7 +60,7 @@ public class ImGuiRenderContext {
         imGuiImplGl3(new ImGuiImplGl3());
         this.frameBufferSize = Graphics.ContextProperties.FrameBufferSize.get(graphicsContext);
         frameTime = new float[120 * 10];
-        Async.async(Async.Mode.Async, Cache.OneFrame, graphicsContext.target(), -1, InitContext, this);
+        Async.async(Async.Mode.Async, Cache.OneFrame, graphicsContext.target(), -1, InitContext, this).get();
     }
 
     protected void render(Timer.Time time) {

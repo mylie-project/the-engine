@@ -40,11 +40,12 @@ public abstract class Timer extends CoreFeature implements BaseFeature.Core, Lif
 
     @Override
     public void onUpdate() {
+
         time = getNewTime();
         logInterval += (float) time.delta();
         count++;
         if (logInterval > settings().fpsLogInterval()) {
-            // log.info("FPS: {}", count);
+            log.info("FPS: {}", count);
             count = 0;
             logInterval = 0;
         }

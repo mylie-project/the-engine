@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.EngineManager;
+import mylie.engine.core.features.async.schedulers.SingleThreadSchedulerSettings;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.graphics.GraphicsManager;
@@ -14,7 +15,7 @@ import mylie.engine.input.listeners.RawInputListener;
 import mylie.engine.platform.PlatformDesktop;
 import mylie.examples.utils.IconFactory;
 import mylie.imgui.ImGuiRenderer;
-import mylie.lwjgl3.opengl.OpenglSettings;
+import mylie.lwjgl3.opengl.Lwjgl3OpenglSettings;
 import mylie.util.configuration.Configuration;
 import org.joml.Vector2i;
 
@@ -31,8 +32,8 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         PlatformDesktop platform = new PlatformDesktop();
         Configuration<Engine> engineConfiguration = platform.initialize();
         engineConfiguration.set(Engine.Settings.Application, new A0_HelloEngine());
-        // engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
-        engineConfiguration.set(Engine.Settings.GraphicsApi, new OpenglSettings());
+        //engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
+        engineConfiguration.set(Engine.Settings.GraphicsApi, new Lwjgl3OpenglSettings());
         Engine.ShutdownReason start = Engine.start(engineConfiguration, true, false);
         log.info(start.toString());
     }

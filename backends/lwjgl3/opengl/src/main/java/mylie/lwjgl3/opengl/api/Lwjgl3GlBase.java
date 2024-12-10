@@ -2,7 +2,7 @@ package mylie.lwjgl3.opengl.api;
 
 import org.lwjgl.opengl.GL11;
 
-public class GlBase implements mylie.engine.graphics.apis.opengl.api.GlBase {
+public class Lwjgl3GlBase implements mylie.engine.graphics.apis.opengl.api.GlBase {
 
     @Override
     public int getInteger(int parameter) {

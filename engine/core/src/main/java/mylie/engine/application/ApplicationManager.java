@@ -7,6 +7,7 @@ import mylie.engine.core.*;
 import mylie.engine.core.Engine.Barriers;
 import mylie.engine.core.features.async.*;
 import mylie.engine.core.features.timer.Timer;
+import mylie.engine.graphics.GraphicsModule;
 import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
 
@@ -59,6 +60,7 @@ public class ApplicationManager extends CoreFeature implements Lifecycle.Update.
                 this,
                 application,
                 time));
+        get(GraphicsModule.class).lastFrameComplete();
     }
 
     @Override

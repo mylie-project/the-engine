@@ -93,7 +93,7 @@ public class GlfwContext extends GraphicsContext {
         protected Boolean run(GlfwContext o) {
             GLFW.glfwMakeContextCurrent(o.handle);
             Boolean vsync = o.configuration().get(Parameters.VSync);
-            GLFW.glfwSwapInterval(vsync ? 1 : 0);
+            GLFW.glfwSwapInterval(vsync ? -1 : 0);
             return true;
         }
     };

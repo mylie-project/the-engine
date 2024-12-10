@@ -1,6 +1,7 @@
 package mylie.engine.graphics;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,6 +20,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
 
     private final List<GraphicsContext> activeContexts;
     private final List<GraphicsContext> syncedContexts;
+    private final List<Result<Boolean>> swapBufferQueue;
     private ContextProvider contextProvider;
     private GraphicsApi graphicsApi;
     private GraphicsContext primaryContext;
@@ -27,6 +29,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
         super(GraphicsModule.class);
         activeContexts = new CopyOnWriteArrayList<>();
         syncedContexts = new CopyOnWriteArrayList<>();
+        swapBufferQueue = new LinkedList<>();
     }
 
     @Override
@@ -46,14 +49,19 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
         add(new Internal());
     }
 
+    public void lastFrameComplete(){
+        while (!swapBufferQueue.isEmpty()) {
+            swapBufferQueue.removeFirst().get();
+        }
+    }
+
     @Override
     public void onUpdate() {
         if (syncedContexts.isEmpty()) return;
-        Set<Result<Boolean>> results = new HashSet<>();
+
         for (GraphicsContext syncedContext : syncedContexts) {
-            results.add(syncedContext.swapBuffers());
+            swapBufferQueue.add(syncedContext.swapBuffers());
         }
-        Async.await(results);
     }
 
     @Override
