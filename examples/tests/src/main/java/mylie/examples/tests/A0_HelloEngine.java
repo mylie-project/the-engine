@@ -15,6 +15,7 @@ import mylie.engine.input.listeners.RawInputListener;
 import mylie.engine.platform.PlatformDesktop;
 import mylie.examples.utils.IconFactory;
 import mylie.imgui.ImGuiRenderer;
+import mylie.imgui.features.InfoPanel;
 import mylie.lwjgl3.opengl.Lwjgl3OpenglSettings;
 import mylie.util.configuration.Configuration;
 import org.joml.Vector2i;
@@ -55,6 +56,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
 
         addFeature(new ImGuiRenderer());
         getFeature(ImGuiRenderer.class).addRenderContext(graphicsContext);
+        addFeature(new InfoPanel());
 
         OptionsManager feature = getFeature(OptionsManager.class);
         System.out.println(feature.toString());

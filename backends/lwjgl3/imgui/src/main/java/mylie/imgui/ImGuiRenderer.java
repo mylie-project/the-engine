@@ -54,4 +54,8 @@ public class ImGuiRenderer extends AppFeature.Async
             imGuiRenderContext.inputEvents().add(event);
         }
     }
+
+    public void addImGuiFeature(ImGuiFeature imGuiFeature) {
+        renderContexts.values().forEach(renderContext -> renderContext.addImGuiFeature(imGuiFeature));
+    }
 }
