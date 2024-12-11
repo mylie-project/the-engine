@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.EngineManager;
-import mylie.engine.core.features.async.schedulers.SingleThreadSchedulerSettings;
+import mylie.engine.core.features.options.OptionsManager;
 import mylie.engine.core.features.timer.Timer;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.graphics.GraphicsManager;
@@ -32,7 +32,7 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         PlatformDesktop platform = new PlatformDesktop();
         Configuration<Engine> engineConfiguration = platform.initialize();
         engineConfiguration.set(Engine.Settings.Application, new A0_HelloEngine());
-        //engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
+        // engineConfiguration.set(Engine.Settings.Scheduler,new SingleThreadSchedulerSettings());
         engineConfiguration.set(Engine.Settings.GraphicsApi, new Lwjgl3OpenglSettings());
         Engine.ShutdownReason start = Engine.start(engineConfiguration, true, false);
         log.info(start.toString());
@@ -55,6 +55,9 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
 
         addFeature(new ImGuiRenderer());
         getFeature(ImGuiRenderer.class).addRenderContext(graphicsContext);
+
+        OptionsManager feature = getFeature(OptionsManager.class);
+        System.out.println(feature.toString());
     }
 
     @Override

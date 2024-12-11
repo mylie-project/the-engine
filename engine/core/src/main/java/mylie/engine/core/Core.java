@@ -6,6 +6,7 @@ import mylie.engine.application.ApplicationManager;
 import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.core.features.async.schedulers.SchedulerSingleThreaded;
+import mylie.engine.core.features.options.OptionsManager;
 import mylie.engine.graphics.GraphicsModule;
 import mylie.engine.input.InputModule;
 import mylie.util.configuration.Configuration;
@@ -64,6 +65,7 @@ public class Core {
     }
 
     private void initModules() {
+        featureManager.add(new OptionsManager());
         featureManager.add(new Internal());
         initFeature(Engine.Settings.Scheduler);
         initFeature(Engine.Settings.Timer);

@@ -49,7 +49,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
         add(new Internal());
     }
 
-    public void lastFrameComplete(){
+    public void lastFrameComplete() {
         while (!swapBufferQueue.isEmpty()) {
             swapBufferQueue.removeFirst().get();
         }
