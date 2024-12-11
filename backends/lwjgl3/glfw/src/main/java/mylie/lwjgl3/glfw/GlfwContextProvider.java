@@ -15,8 +15,8 @@ import mylie.engine.core.Engine;
 import mylie.engine.core.FeatureManager;
 import mylie.engine.core.features.async.Scheduler;
 import mylie.engine.core.features.timer.Timer;
+import mylie.engine.graphics.ContextProperties;
 import mylie.engine.graphics.ContextProvider;
-import mylie.engine.graphics.Graphics;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.input.InputManager;
 import mylie.util.configuration.Configuration;
@@ -34,7 +34,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     private Timer timer;
     private Scheduler scheduler;
     private final GlfwInputProvider inputProvider;
-    private Graphics.Display primaryDisplay;
+    private GraphicsContext.Display primaryDisplay;
 
     public GlfwContextProvider() {
         inputProvider = new GlfwInputProvider();
@@ -104,7 +104,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             if (windowed.position() == GraphicsContext.VideoMode.Windowed.Centered || windowed.position() == null) {
                 DataTypes.GlfwDisplay tmpDisplay =
                         (DataTypes.GlfwDisplay) (windowed.display() != null ? windowed.display() : primaryDisplay);
-                Graphics.Display.VideoMode tmpVideoMode = tmpDisplay.defaultVideoMode();
+                GraphicsContext.Display.VideoMode tmpVideoMode = tmpDisplay.defaultVideoMode();
                 position = new Vector2i(
                         (tmpVideoMode.resolution().x() - size.x()) / 2,
                         (tmpVideoMode.resolution().y() - size.y()) / 2);
@@ -125,7 +125,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
     }
 
     @Override
-    public List<Graphics.Display> onInitialize(
+    public List<GraphicsContext.Display> onInitialize(
             FeatureManager featureManager, Configuration<Engine> engineConfiguration) {
         scheduler = featureManager.get(Scheduler.class);
         timer = featureManager.get(Timer.class);
@@ -135,8 +135,8 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             throw new RuntimeException("Unable to initialize GLFW");
         }
         featureManager.get(InputManager.class).addInputProvider(inputProvider);
-        List<Graphics.Display> displays = getDisplays();
-        for (Graphics.Display display : displays) {
+        List<GraphicsContext.Display> displays = getDisplays();
+        for (GraphicsContext.Display display : displays) {
             if (display.primary()) {
                 primaryDisplay = display;
                 break;
@@ -145,8 +145,8 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         return displays;
     }
 
-    private List<Graphics.Display> getDisplays() {
-        List<Graphics.Display> displays = new ArrayList<>();
+    private List<GraphicsContext.Display> getDisplays() {
+        List<GraphicsContext.Display> displays = new ArrayList<>();
         PointerBuffer pointerBuffer = GLFW.glfwGetMonitors();
         for (int i = 0; i < Objects.requireNonNull(pointerBuffer).capacity(); i++) {
             long handle = pointerBuffer.get(i);
@@ -155,7 +155,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
         return displays;
     }
 
-    private Graphics.Display getDisplay(long handle) {
+    private GraphicsContext.Display getDisplay(long handle) {
         List<DataTypes.GlfwVideoMode> videoModes = getVideoModes(handle);
         DataTypes.GlfwVideoMode defaultVideoMode =
                 getVideoMode(handle, Objects.requireNonNull(GLFW.glfwGetVideoMode(handle)));
@@ -223,7 +223,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             } else {
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
-            Graphics.ContextProperties.Position.set(
+            ContextProperties.Position.set(
                     contexts, new Vector2i(0, 0), timer.time().frameId());
         } else if (videoMode instanceof GraphicsContext.VideoMode.Fullscreen fullscreenMode) {
             fullscreen = true;
@@ -238,7 +238,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 display = ((DataTypes.GlfwDisplay) primaryDisplay).handle();
                 size = primaryDisplay.defaultVideoMode().resolution();
             }
-            Graphics.ContextProperties.Position.set(
+            ContextProperties.Position.set(
                     contexts, new Vector2i(0, 0), timer.time().frameId());
         }
 
@@ -254,7 +254,7 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
             if (windowed.position() == GraphicsContext.VideoMode.Windowed.Centered || windowed.position() == null) {
                 DataTypes.GlfwDisplay tmpDisplay =
                         (DataTypes.GlfwDisplay) (windowed.display() != null ? windowed.display() : primaryDisplay);
-                Graphics.Display.VideoMode tmpVideoMode = tmpDisplay.defaultVideoMode();
+                GraphicsContext.Display.VideoMode tmpVideoMode = tmpDisplay.defaultVideoMode();
                 position = new Vector2i(
                         (tmpVideoMode.resolution().x() - size.x()) / 2,
                         (tmpVideoMode.resolution().y() - size.y()) / 2);
@@ -262,15 +262,13 @@ public abstract class GlfwContextProvider extends ContextProvider implements GLF
                 position = windowed.position();
             }
             GLFW.glfwSetWindowPos(window, position.x(), position.y());
-            Graphics.ContextProperties.Position.set(
-                    contexts, position, timer.time().frameId());
+            ContextProperties.Position.set(contexts, position, timer.time().frameId());
         }
         contexts.handle = window;
         inputProvider.addContext(contexts);
         setIconsWrapper(window, configuration.get(GraphicsContext.Parameters.Icons));
-        Graphics.ContextProperties.Size.set(contexts, size, timer.time().frameId());
-        Graphics.ContextProperties.FrameBufferSize.set(
-                contexts, size, timer.time().frameId());
+        ContextProperties.Size.set(contexts, size, timer.time().frameId());
+        ContextProperties.FrameBufferSize.set(contexts, size, timer.time().frameId());
         GLFW.glfwShowWindow(window);
         return true;
     }

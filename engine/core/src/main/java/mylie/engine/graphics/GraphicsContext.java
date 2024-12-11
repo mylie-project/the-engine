@@ -8,6 +8,7 @@ import mylie.engine.core.features.async.*;
 import mylie.util.Versioned;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
+import org.joml.Vector4ic;
 
 /**
  * The GraphicsContext class serves as an abstract base for implementing various
@@ -34,8 +35,8 @@ public abstract class GraphicsContext {
 
     private final BlockingQueue<Runnable> queue;
     private final FeatureThread featureThread;
-    private final Map<Graphics.ContextProperty<?>, Versioned<?>> properties;
-    private final Map<Graphics.ContextCapability<?>, Object> capabilities;
+    private final Map<ContextProperties.ContextProperty<?>, Versioned<?>> properties;
+    private final Map<ContextCapabilities.ContextCapability<?>, Object> capabilities;
     private final List<ApiFeature> apiFeatures;
 
     protected GraphicsContext(Configuration configuration, Scheduler scheduler) {
@@ -238,7 +239,7 @@ public abstract class GraphicsContext {
          * @param display The display on which the full-screen mode is to be set.
          * @param videoMode The specific video mode configuration to use for full-screen rendering.
          */
-        record Fullscreen(Graphics.Display display, Graphics.Display.VideoMode videoMode) implements VideoMode {}
+        record Fullscreen(Display display, Display.VideoMode videoMode) implements VideoMode {}
 
         /**
          * The Windowed record represents a windowed video mode within a graphical
@@ -251,7 +252,7 @@ public abstract class GraphicsContext {
          *                 a Vector2ic object. The static field Centered provides a
          *                 default positioning at the screen center.
          */
-        record Windowed(Graphics.Display display, Vector2ic size, Vector2ic position) implements VideoMode {
+        record Windowed(Display display, Vector2ic size, Vector2ic position) implements VideoMode {
             public static final Vector2ic Centered = new Vector2i(0, 0);
         }
 
@@ -265,8 +266,36 @@ public abstract class GraphicsContext {
          *
          * @param display The display on which the windowed fullscreen mode is to be set.
          */
-        record WindowedFullscreen(Graphics.Display display) implements VideoMode {}
+        record WindowedFullscreen(Display display) implements VideoMode {}
     }
 
     public record Icons(String... paths) {}
+
+    /**
+     * Represents a display for rendering graphical content. A Display contains information
+     * about whether it is the primary display, its default video mode, and the available video
+     * modes it supports.
+     */
+    @ToString
+    @Getter
+    @AllArgsConstructor
+    public static class Display {
+        private boolean primary;
+        private VideoMode defaultVideoMode;
+        private List<? extends VideoMode> videoModes;
+
+        /**
+         * Represents a specific configuration of a video mode within a display. VideoMode holds the
+         * essential properties that define the display resolution, refresh rate, and format bits.
+         * It is used to manage and configure how images and graphics are rendered on a display.
+         */
+        @ToString
+        @Getter
+        @AllArgsConstructor
+        public static class VideoMode {
+            private Vector2ic resolution;
+            private int refreshRate;
+            private Vector4ic formatBits;
+        }
+    }
 }

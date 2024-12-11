@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import mylie.engine.application.BaseApplication;
 import mylie.engine.core.Engine;
 import mylie.engine.core.EngineManager;
-import mylie.engine.core.features.options.OptionsManager;
 import mylie.engine.core.features.timer.Timer;
-import mylie.engine.graphics.GraphicsContext;
-import mylie.engine.graphics.GraphicsManager;
+import mylie.engine.graphics.*;
 import mylie.engine.input.Input;
 import mylie.engine.input.InputEvent;
 import mylie.engine.input.InputManager;
@@ -19,6 +17,7 @@ import mylie.imgui.features.InfoPanel;
 import mylie.lwjgl3.opengl.Lwjgl3OpenglSettings;
 import mylie.util.configuration.Configuration;
 import org.joml.Vector2i;
+import org.joml.Vector3f;
 
 @Slf4j
 public class A0_HelloEngine extends BaseApplication implements RawInputListener {
@@ -58,8 +57,8 @@ public class A0_HelloEngine extends BaseApplication implements RawInputListener 
         getFeature(ImGuiRenderer.class).addRenderContext(graphicsContext);
         addFeature(new InfoPanel());
 
-        OptionsManager feature = getFeature(OptionsManager.class);
-        System.out.println(feature.toString());
+        Mesh mesh = new Mesh(VertexDataLayouts.Unshaded, 1);
+        mesh.vertexData(VertexDataPoints.Position, 0, new Vector3f(1, 1, 0));
     }
 
     @Override

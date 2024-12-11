@@ -9,7 +9,7 @@ import mylie.engine.core.features.async.Cache;
 import mylie.engine.core.features.async.Functions;
 import mylie.engine.core.features.async.Result;
 import mylie.engine.core.features.timer.Timer;
-import mylie.engine.graphics.Graphics;
+import mylie.engine.graphics.ContextProperties;
 import mylie.engine.input.Input;
 import mylie.engine.input.InputDevice;
 import mylie.engine.input.InputEvent;
@@ -131,7 +131,7 @@ public class GlfwInputProvider implements InputModule.Provider {
         log.trace("Frame Buffer Size Callback: window={}, width={}, height={}", window, width, height);
         GlfwContext context = getContext(window);
         Vector2i frameBufferSize = new Vector2i(width, height);
-        Graphics.ContextProperties.FrameBufferSize.set(
+        ContextProperties.FrameBufferSize.set(
                 context, frameBufferSize, timer.time().frameId());
         eventList.add(new InputEvent.Window.FramebufferSize(context, frameBufferSize));
     }
@@ -140,7 +140,7 @@ public class GlfwInputProvider implements InputModule.Provider {
         log.trace("Size Callback: window={}, width={}, height={}", window, width, height);
         GlfwContext context = getContext(window);
         Vector2i size = new Vector2i(width, height);
-        Graphics.ContextProperties.Size.set(context, size, timer.time().frameId());
+        ContextProperties.Size.set(context, size, timer.time().frameId());
         eventList.add(new InputEvent.Window.Size(context, size));
     }
 
@@ -153,14 +153,14 @@ public class GlfwInputProvider implements InputModule.Provider {
     public void windowFocusCallback(long l, boolean b) {
         log.trace("Window Focus Callback: window={}, focused={}", l, b);
         GlfwContext context = getContext(l);
-        Graphics.ContextProperties.Focus.set(context, b, timer.time().frameId());
+        ContextProperties.Focus.set(context, b, timer.time().frameId());
         eventList.add(new InputEvent.Window.Focus(context, b));
     }
 
     public void windowMaximizeCallback(long l, boolean b) {
         log.trace("Window Maximize Callback: window={}, maximized={}", l, b);
         GlfwContext context = getContext(l);
-        Graphics.ContextProperties.Maximized.set(context, b, timer.time().frameId());
+        ContextProperties.Maximized.set(context, b, timer.time().frameId());
         eventList.add(new InputEvent.Window.Maximized(context, b));
     }
 
@@ -168,7 +168,7 @@ public class GlfwInputProvider implements InputModule.Provider {
         log.trace("Window Pos Callback: window={}, x={}, y={}", l, i, i1);
         GlfwContext context = getContext(l);
         Vector2i position = new Vector2i(i, i1);
-        Graphics.ContextProperties.Position.set(context, position, timer.time().frameId());
+        ContextProperties.Position.set(context, position, timer.time().frameId());
         eventList.add(new InputEvent.Window.Position(context, position));
     }
 

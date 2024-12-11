@@ -7,7 +7,6 @@ import java.util.function.BiConsumer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import mylie.engine.graphics.Graphics;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.input.Input;
 import org.joml.Vector2ic;
@@ -18,7 +17,7 @@ public class DataTypes {
 
     @Getter(AccessLevel.PACKAGE)
     @Setter(AccessLevel.PACKAGE)
-    static class GlfwDisplay extends Graphics.Display {
+    static class GlfwDisplay extends GraphicsContext.Display {
         private long handle;
 
         public GlfwDisplay(
@@ -30,7 +29,7 @@ public class DataTypes {
 
     @Getter(AccessLevel.PACKAGE)
     @Setter(AccessLevel.PACKAGE)
-    static class GlfwVideoMode extends Graphics.Display.VideoMode {
+    static class GlfwVideoMode extends GraphicsContext.Display.VideoMode {
         private long displayHandle;
 
         public GlfwVideoMode(long displayHandle, Vector2ic resolution, int refreshRate, Vector4ic formatBits) {

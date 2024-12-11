@@ -12,18 +12,18 @@ public interface GraphicsManager extends BaseFeature.App {
     /**
      * Retrieves a list of available graphics displays.
      *
-     * @return a list of {@link Graphics.Display} representing all currently available displays.
+     * @return a list of {@link GraphicsContext.Display} representing all currently available displays.
      */
-    List<Graphics.Display> availableDisplays();
+    List<GraphicsContext.Display> availableDisplays();
 
     /**
      * Returns the primary display from the list of available displays.
      *
-     * @return the primary {@link Graphics.Display} if it exists among the available displays
+     * @return the primary {@link GraphicsContext.Display} if it exists among the available displays
      * @throws RuntimeException if no primary display is found in the available displays
      */
-    default Graphics.Display primaryDisplay() {
-        for (Graphics.Display availableDisplay : availableDisplays()) {
+    default GraphicsContext.Display primaryDisplay() {
+        for (GraphicsContext.Display availableDisplay : availableDisplays()) {
             if (availableDisplay.primary()) {
                 return availableDisplay;
             }

@@ -18,7 +18,7 @@ import mylie.engine.core.features.async.Async;
 import mylie.engine.core.features.async.Cache;
 import mylie.engine.core.features.async.Functions;
 import mylie.engine.core.features.timer.Timer;
-import mylie.engine.graphics.Graphics;
+import mylie.engine.graphics.ContextProperties;
 import mylie.engine.graphics.GraphicsContext;
 import mylie.engine.input.Input;
 import mylie.engine.input.InputEvent;
@@ -46,7 +46,7 @@ public class ImGuiRenderContext {
         imGuiContext(ImGui.createContext());
         imPlotContext(ImPlot.createContext());
         imGuiImplGl3(new ImGuiImplGl3());
-        this.frameBufferSize = Graphics.ContextProperties.FrameBufferSize.get(graphicsContext);
+        this.frameBufferSize = ContextProperties.FrameBufferSize.get(graphicsContext);
         Async.async(Async.Mode.Async, Cache.OneFrame, graphicsContext.target(), -1, InitContext, this)
                 .get();
     }

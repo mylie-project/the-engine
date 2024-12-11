@@ -16,7 +16,7 @@ import mylie.util.configuration.Configuration;
 @Slf4j
 public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lifecycle.InitDestroy {
     @Getter(AccessLevel.PUBLIC)
-    private List<Graphics.Display> availableDisplays;
+    private List<GraphicsContext.Display> availableDisplays;
 
     private final List<GraphicsContext> activeContexts;
     private final List<GraphicsContext> syncedContexts;
@@ -80,7 +80,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
     private class Internal implements GraphicsManager {
 
         @Override
-        public List<Graphics.Display> availableDisplays() {
+        public List<GraphicsContext.Display> availableDisplays() {
             return availableDisplays;
         }
 
@@ -91,7 +91,7 @@ public class GraphicsModule extends CoreFeature implements Lifecycle.Update, Lif
                 return null;
             }
             GraphicsContext context = contextProvider.createContext(contextSettings, primaryContext);
-            Graphics.ContextCapability.initAll(context);
+            ContextCapabilities.ContextCapability.initAll(context);
             context.featureThread().start();
             if (synced) {
                 syncedContexts.add(context);
