@@ -11,7 +11,8 @@ public interface ContextProperties {
     ContextProperty<Vector2ic> Position = new ContextProperty<>();
     ContextProperty<Vector2ic> FrameBufferSize = new ContextProperty<>();
 
-    public static class ContextProperty<T> {
+    @SuppressWarnings("unchecked")
+    class ContextProperty<T> {
         public Versioned.Reference<T> get(GraphicsContext context) {
             Map<ContextProperty<?>, Versioned<?>> properties = context.properties();
             Versioned<?> versioned = properties.get(this);

@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 
+@SuppressWarnings("unused")
 public class Datatypes {
     public static final PrimitiveDataType<Integer> Integer = new PrimitiveDataType<>(
             java.lang.Integer.BYTES, 1, ByteBuffer::getInt, (value, buffer) -> buffer.putInt(value));
