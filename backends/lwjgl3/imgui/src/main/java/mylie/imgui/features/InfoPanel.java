@@ -96,51 +96,6 @@ public class InfoPanel extends ImGuiFeature {
             }
         }
         ImGui.end();
-        /*if (ImGui.collapsingHeader("FrameTime Graph")) {
-            ImPlot.beginPlot(
-                    "Frametime",
-                    new ImVec2(390, 100),
-                    ImPlotFlags.NoMenus | ImPlotFlags.NoInputs | ImPlotFlags.NoTitle | ImPlotFlags.NoLegend);
-            ImPlot.setupAxis(
-                    ImPlotAxis.Y1, "ms", ImPlotAxisFlags.AutoFit | ImPlotAxisFlags.NoMenus | ImPlotAxisFlags.NoLabel);
-            ImPlot.setupAxis(
-                    ImPlotAxis.X1,
-                    "ms",
-                    ImPlotAxisFlags.AutoFit
-                            | ImPlotAxisFlags.NoMenus
-                            | ImPlotAxisFlags.NoLabel
-                            | ImPlotAxisFlags.NoDecorations);
-            ImPlot.plotLine("Frametime", frameTime, frameTime.length);
-            ImPlot.plotVLines("Frame", new int[]{currFrame % frameTime.length});
-            ImPlot.endPlot();
-        }
-        if (ImGui.collapsingHeader("Heap Graph")) {
-            ImPlot.beginPlot(
-                    "Heap",
-                    new ImVec2(390, 100),
-                    ImPlotFlags.NoMenus | ImPlotFlags.NoInputs | ImPlotFlags.NoTitle | ImPlotFlags.NoLegend);
-            ImPlot.setupAxis(
-                    ImPlotAxis.Y1, "ms", ImPlotAxisFlags.AutoFit | ImPlotAxisFlags.NoMenus | ImPlotAxisFlags.NoLabel);
-            ImPlot.setupAxis(
-                    ImPlotAxis.X1,
-                    "ms",
-                    ImPlotAxisFlags.AutoFit
-                            | ImPlotAxisFlags.NoMenus
-                            | ImPlotAxisFlags.NoLabel
-                            | ImPlotAxisFlags.NoDecorations);
-            ImPlot.plotLine("Heap", heap, heap.length);
-            ImPlot.plotVLines("Frame", new int[]{currFrame % frameTime.length});
-            ImPlot.endPlot();
-        }
-
-        if (ImGui.beginPopupContextWindow()) {
-            if (ImGui.menuItem("Top Left")) windowLocation = 0;
-            if (ImGui.menuItem("Top Right")) windowLocation = 1;
-            if (ImGui.menuItem("Bottom Left")) windowLocation = 2;
-            if (ImGui.menuItem("Bottom Right")) windowLocation = 3;
-            ImGui.endPopup();
-        }
-        ;*/
     }
 
     private int getFreeRam() {
