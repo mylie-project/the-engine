@@ -10,15 +10,13 @@ public abstract class ImGuiFeature extends AppFeature.Sequential implements Life
     }
 
     @Override
-    public void onDestroy() {
-
-    }
+    public void onDestroy() {}
 
     @Override
     public void onInit() {
         ImGuiRenderer imGuiRenderer = get(ImGuiRenderer.class);
-        if(imGuiRenderer==null){
-            imGuiRenderer=new ImGuiRenderer();
+        if (imGuiRenderer == null) {
+            imGuiRenderer = new ImGuiRenderer();
             add(imGuiRenderer);
         }
         imGuiRenderer.addImGuiFeature(this);

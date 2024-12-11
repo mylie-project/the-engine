@@ -2,22 +2,14 @@ package mylie.imgui;
 
 import imgui.ImDrawData;
 import imgui.ImGui;
-import imgui.ImGuiViewport;
-import imgui.ImVec2;
 import imgui.extension.implot.ImPlot;
 import imgui.extension.implot.ImPlotContext;
-import imgui.extension.implot.flag.ImPlotAxis;
-import imgui.extension.implot.flag.ImPlotAxisFlags;
-import imgui.extension.implot.flag.ImPlotFlags;
-import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.internal.ImGuiContext;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,10 +38,6 @@ public class ImGuiRenderContext {
     ImPlotContext imPlotContext;
     ImGuiImplGl3 imGuiImplGl3;
     final List<ImGuiFeature> imGuiFeatureList;
-
-
-
-
 
     public ImGuiRenderContext(GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
@@ -83,7 +71,7 @@ public class ImGuiRenderContext {
         for (ImGuiFeature imGuiFeature : imGuiFeatureList) {
             imGuiFeature.renderImGui();
         }
-        //ImGui.showDemoWindow();
+        // ImGui.showDemoWindow();
         ImGui.endFrame();
         ImGui.render();
         ImDrawData drawData = ImGui.getDrawData();

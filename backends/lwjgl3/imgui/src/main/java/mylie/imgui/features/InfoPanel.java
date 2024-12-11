@@ -10,12 +10,11 @@ import imgui.extension.implot.flag.ImPlotFlags;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTableColumnFlags;
 import imgui.flag.ImGuiWindowFlags;
-import mylie.engine.core.features.timer.Timer;
-import mylie.imgui.ImGuiFeature;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import mylie.engine.core.features.timer.Timer;
+import mylie.imgui.ImGuiFeature;
 
 public class InfoPanel extends ImGuiFeature {
     Timer timer;
@@ -24,6 +23,7 @@ public class InfoPanel extends ImGuiFeature {
     long[] heap;
     int currFrame = 0;
     List<DataGraph> dataGraphs = new ArrayList<>();
+
     public InfoPanel() {
         super(InfoPanel.class);
     }
@@ -34,7 +34,8 @@ public class InfoPanel extends ImGuiFeature {
         timer = get(Timer.class);
         frameTime = new float[120 * 10];
         heap = new long[120 * 10];
-        dataGraphs.add(new DataGraph("FrameTime", 100, 1 / 10f, () -> (float) timer.time().delta()*1000));
+        dataGraphs.add(new DataGraph(
+                "FrameTime", 100, 1 / 10f, () -> (float) timer.time().delta() * 1000));
         dataGraphs.add(new DataGraph("Memory", 100, 1 / 10f, () -> (float) getFreeRam()));
         dataGraphs.add(new DataGraph("Cpu Usage", 100, 1 / 10f, () -> (float) getCpuUsage()));
     }
@@ -44,7 +45,8 @@ public class InfoPanel extends ImGuiFeature {
         Timer.Time time = timer.time();
         currFrame++;
         frameTime[currFrame % frameTime.length] = (float) (time.delta() * 1000);
-        heap[currFrame % frameTime.length] = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
+        heap[currFrame % frameTime.length] =
+                (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
         ImGuiViewport viewport = ImGui.getMainViewport();
         ImVec2 workPos = viewport.getWorkPos();
         ImVec2 workSize = viewport.getWorkSize();
@@ -142,22 +144,23 @@ public class InfoPanel extends ImGuiFeature {
     }
 
     private int getFreeRam() {
-// Get the free system memory in megabytes
-        com.sun.management.OperatingSystemMXBean osBean =
-                (com.sun.management.OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+        // Get the free system memory in megabytes
+        com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean)
+                java.lang.management.ManagementFactory.getOperatingSystemMXBean();
         long freePhysicalMemorySize = osBean.getFreeMemorySize() / 1024 / 1024;
         return (int) freePhysicalMemorySize;
     }
 
     private int getCpuUsage() {
-        java.lang.management.OperatingSystemMXBean osBean = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+        java.lang.management.OperatingSystemMXBean osBean =
+                java.lang.management.ManagementFactory.getOperatingSystemMXBean();
         if (osBean instanceof com.sun.management.OperatingSystemMXBean extendedOsBean) {
             return (int) (extendedOsBean.getCpuLoad() * 100);
         }
         return -1; // Default value if CPU usage cannot be retrieved
     }
 
-    static class DataGraph{
+    static class DataGraph {
         String title;
         float updateInterval;
         float[] data;
@@ -165,7 +168,8 @@ public class InfoPanel extends ImGuiFeature {
         int currDataCount;
         float currTime;
         Supplier<Float> dataSupplier;
-        public DataGraph(String title,int historyLength, float updateInterval, Supplier<Float> dataSupplier) {
+
+        public DataGraph(String title, int historyLength, float updateInterval, Supplier<Float> dataSupplier) {
             this.title = title;
             this.updateInterval = updateInterval;
             data = new float[historyLength];
@@ -175,23 +179,22 @@ public class InfoPanel extends ImGuiFeature {
             currTime = 0;
         }
 
-        void update(Timer.Time time){
-            currTime+= (float) time.delta();
-            if(currTime > updateInterval){
-                currTime=0;
-                for (int i = 0; i < data.length-1; i++) {
-                    data[i] = data[i+1];
+        void update(Timer.Time time) {
+            currTime += (float) time.delta();
+            if (currTime > updateInterval) {
+                currTime = 0;
+                for (int i = 0; i < data.length - 1; i++) {
+                    data[i] = data[i + 1];
                 }
-                data[data.length - 1] = currData/currDataCount;
-                currData=0;
-                currDataCount=0;
+                data[data.length - 1] = currData / currDataCount;
+                currData = 0;
+                currDataCount = 0;
             }
             currDataCount++;
-            currData+=dataSupplier.get();
-
+            currData += dataSupplier.get();
         }
 
-        void render(Timer.Time time){
+        void render(Timer.Time time) {
             ImPlot.beginPlot(
                     title,
                     new ImVec2(390, 100),
